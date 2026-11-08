@@ -82,6 +82,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,12,.
 .browser-bar i:nth-child(1){background:#ff5f57}.browser-bar i:nth-child(2){background:#febc2e}.browser-bar i:nth-child(3){background:#28c840}
 .browser-bar span{margin-left:10px;font-size:.75rem;color:var(--dim);background:#1a1a1d;border-radius:6px;padding:3px 10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hero-visual{position:relative}
+.browser > img{width:100%;height:auto;aspect-ratio:1917/968;object-fit:cover;object-position:top left}
 .hero-visual .float{position:absolute;bottom:-22px;left:-22px;background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center;box-shadow:0 20px 40px -20px #000}
 .float b{display:block;font-size:.95rem}.float small{color:var(--muted);font-size:.78rem}
 .ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(255,106,0,.12);color:var(--or);flex:none}
@@ -307,13 +308,10 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <a href="#contato" data-en="Contact">Contato</a>
     </nav>
     <div class="nav-right">
-      <div class="cur" role="group" aria-label="Idioma / Language">
-        <button type="button" data-lang="pt" class="on">PT</button>
-        <button type="button" data-lang="en">EN</button>
-      </div>
-      <div class="cur" role="group" aria-label="Moeda / Currency">
-        <button type="button" data-cur="brl" class="on">R$</button>
-        <button type="button" data-cur="usd">US$</button>
+      <!-- Idioma e moeda andam juntos: PT = reais, EN = dólar -->
+      <div class="cur" role="group" aria-label="Idioma e moeda / Language and currency">
+        <button type="button" data-lang="pt" class="on" title="Português — preços em reais">PT · R$</button>
+        <button type="button" data-lang="en" title="English — prices in US dollars">EN · US$</button>
       </div>
       <a href="#planos" class="btn btn-primary" style="padding:10px 18px" data-en="See plans">Ver planos</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
@@ -390,20 +388,17 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
     </div>
 
     <div class="projects">
-      <article class="card proj reveal">
+      <article class="card proj reveal" data-gallery>
         <div class="proj-media">
           <div class="browser">
             <div class="browser-bar"><i></i><i></i><i></i><span>molinagrowthagency.com</span></div>
-            <div class="shot">
-              <!-- Mockup automático. Para usar um print real, salve em assets/projetos/molina.webp -->
-              <div class="mock" aria-hidden="true">
-                <span class="pill">£ / $</span>
-                <h4>More enquiries for your local business.</h4>
-                <p>Google Ads &amp; Meta Ads planned, run and reported for local businesses in the UK and US.</p>
-                <div class="mp"><div>Starter<small>one ad platform</small></div><div>Premium<small>Google, Meta &amp; social</small></div><div>Custom<small>pick your services</small></div></div>
-              </div>
-              <img src="assets/projetos/molina.webp" alt="Molina Growth Agency" onerror="this.remove()" style="position:relative" loading="lazy">
-            </div>
+            <div class="shot"><img src="assets/projetos/molina-1.webp" alt="Molina Growth Agency" loading="lazy" data-main></div>
+          </div>
+          <div class="thumbs">
+            <button class="on" data-src="assets/projetos/molina-1.webp" aria-label="1"><img src="assets/projetos/molina-1.webp" alt="" loading="lazy"></button>
+            <button data-src="assets/projetos/molina-2.webp" aria-label="2"><img src="assets/projetos/molina-2.webp" alt="" loading="lazy"></button>
+            <button data-src="assets/projetos/molina-3.webp" aria-label="3"><img src="assets/projetos/molina-3.webp" alt="" loading="lazy"></button>
+            <button data-src="assets/projetos/molina-4.webp" aria-label="4"><img src="assets/projetos/molina-4.webp" alt="" loading="lazy"></button>
           </div>
         </div>
         <div class="proj-body">
@@ -889,7 +884,9 @@ const $ = (s, el=document) => el.querySelector(s);
 const $$ = (s, el=document) => [...el.querySelectorAll(s)];
 const store = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
 let lang = store.get('fnx_lang') || ((navigator.language||'pt').toLowerCase().startsWith('pt') ? 'pt' : 'en');
-let moeda = store.get('fnx_moeda') || (lang === 'en' ? 'usd' : 'brl');
+// A moeda segue o idioma: português = reais (BRL), inglês = dólar (USD)
+const moedaDoIdioma = l => (l === 'en' ? 'usd' : 'brl');
+let moeda = moedaDoIdioma(lang);
 const T = () => TXT[lang];
 const fmt = (v, c) => c === 'brl'
   ? 'R$ ' + v.toLocaleString(lang==='en'?'en-US':'pt-BR')
@@ -920,7 +917,9 @@ function aplicaIdioma(){
   if (planoAtual) atualizaSubtitulo();
 }
 $$('[data-lang]').forEach(b => b.addEventListener('click', () => {
-  lang = b.dataset.lang; store.set('fnx_lang', lang); aplicaIdioma();
+  lang = b.dataset.lang; store.set('fnx_lang', lang);
+  moeda = moedaDoIdioma(lang);   // troca os valores junto com o idioma
+  aplicaIdioma();
 }));
 
 /* ---------- planos ---------- */
@@ -945,11 +944,9 @@ function renderFaixas(){
     `<label class="opt"><input type="radio" name="orcamento" value="${esc(f)}" ${i===idx?'checked':''}><span>${esc(f)}</span></label>`).join('');
 }
 function setMoeda(c){
-  moeda = c; store.set('fnx_moeda', c);
-  $$('[data-cur]').forEach(b => b.classList.toggle('on', b.dataset.cur === c));
+  moeda = c;
   renderPlanos(); renderFaixas(); atualizaResumo();
 }
-$$('[data-cur]').forEach(b => b.addEventListener('click', () => setMoeda(b.dataset.cur)));
 
 /* ---------- países (lista ISO sem os bloqueados) ---------- */
 const ISO = 'AD AE AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BZ CA CC CG CH CI CK CL CM CN CO CR CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IS IT JE JM JO JP KE KG KH KI KM KN KR KW KY KZ LA LB LC LI LK LR LS LT LU LV MA MC MD ME MF MG MH MK ML MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RW SA SB SC SE SG SH SI SJ SK SL SM SN SR ST SV SX SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VG VI VN VU WF WS XK YT ZA ZM ZW'.split(' ');
@@ -1147,7 +1144,6 @@ $$('.reveal').forEach(el => io.observe(el));
 document.addEventListener('input', e => { const f = e.target.closest('.field'); if (f) f.classList.remove('bad'); });
 
 $('#year').textContent = new Date().getFullYear();
-$$('[data-cur]').forEach(b => b.classList.toggle('on', b.dataset.cur === moeda));
 aplicaIdioma();
 </script>
 </body>
