@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNX DEV — Sites e sistemas sob medida</title>
+<meta name="description" content="FNX DEV: desenvolvimento de sites, landing pages e sistemas web sob medida. Pagamento seguro no Brasil e no exterior e garantia de 7 dias.">
+<meta name="theme-color" content="#0b0b0c">
+<meta property="og:title" content="FNX DEV — Sites e sistemas sob medida">
+<meta property="og:description" content="Sites, landing pages e sistemas web sob medida. Pagamento seguro e garantia de 7 dias.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b0c; --bg2:#101012; --card:#151517; --card2:#1c1c1f; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --text:#f5f5f6; --muted:#a3a3ab; --dim:#71717a;
+  --or:#ff6a00; --or2:#ff3b1f; --grad:linear-gradient(135deg,#ff7a00 0%,#ff3b1f 100%);
+  --ok:#22c55e; --err:#ef4444; --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(900px 600px at 15% -10%,rgba(255,106,0,.16),transparent 60%),radial-gradient(800px 600px at 110% 10%,rgba(255,59,31,.10),transparent 60%),
+  radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/26px 26px}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.section{padding:96px 0}
+.eyebrow{display:inline-block;color:var(--or);font-weight:700;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
+h2{font-size:clamp(1.9rem,3.6vw,2.7rem);font-weight:800}
+.lead{color:var(--muted);font-size:1.08rem;max-width:640px}
+.head{margin-bottom:48px}
+.head.center{text-align:center}.head.center .lead{margin:12px auto 0}
+.bar{width:64px;height:4px;border-radius:4px;background:var(--grad);margin:16px 0}
+.head.center .bar{margin:16px auto}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;border-radius:12px;padding:14px 24px;font-weight:700;font-size:.98rem;transition:transform .15s,box-shadow .2s,background .2s,opacity .2s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 30px -10px rgba(255,90,0,.7)}
+.btn-primary:hover{box-shadow:0 14px 36px -10px rgba(255,90,0,.9)}
+.btn-ghost{background:rgba(255,255,255,.04);border:1px solid var(--line2);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+.btn-white{background:#fff;color:#111}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+
+header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,12,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+.brand{font-weight:900;font-size:1.35rem;letter-spacing:.02em}
+.brand span{color:var(--or)}
+.menu{display:flex;gap:26px;font-weight:500;font-size:.93rem;color:var(--muted)}
+.menu a:hover{color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.cur{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.cur button{border:0;background:transparent;padding:6px 11px;border-radius:999px;font-weight:700;font-size:.8rem;color:var(--muted);cursor:pointer}
+.cur button.on{background:var(--grad);color:#fff}
+.burger{display:none;background:transparent;border:1px solid var(--line2);border-radius:10px;width:42px;height:42px;cursor:pointer}
+.burger svg{margin:auto}
+.mobile{display:none;border-top:1px solid var(--line);padding:14px 22px 20px}
+.mobile a{display:block;padding:10px 0;color:var(--muted);font-weight:600}
+.mobile.open{display:block}
+
+.hero{padding:150px 0 80px}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);background:rgba(255,255,255,.03);border-radius:999px;padding:7px 14px;font-size:.84rem;color:var(--muted);margin-bottom:22px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.hero h1{font-size:clamp(2.4rem,5.2vw,3.9rem);font-weight:900}
+.hero p.lead{margin:20px 0 26px;font-size:1.15rem}
+.checks{list-style:none;display:grid;gap:10px;margin-bottom:32px}
+.checks li{display:flex;gap:10px;align-items:flex-start;color:#d4d4d8}
+.checks svg{flex:none;margin-top:3px;color:var(--or)}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.browser{border-radius:16px;overflow:hidden;border:1px solid var(--line2);background:var(--card);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,106,0,.08)}
+.browser-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:#111113;border-bottom:1px solid var(--line)}
+.browser-bar i{width:10px;height:10px;border-radius:50%;background:#3a3a3f}
+.browser-bar i:nth-child(1){background:#ff5f57}.browser-bar i:nth-child(2){background:#febc2e}.browser-bar i:nth-child(3){background:#28c840}
+.browser-bar span{margin-left:10px;font-size:.75rem;color:var(--dim);background:#1a1a1d;border-radius:6px;padding:3px 10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hero-visual{position:relative}
+.hero-visual .float{position:absolute;bottom:-22px;left:-22px;background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center;box-shadow:0 20px 40px -20px #000}
+.float b{display:block;font-size:.95rem}.float small{color:var(--muted);font-size:.78rem}
+.ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(255,106,0,.12);color:var(--or);flex:none}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.svc{padding:28px;transition:border-color .2s,transform .2s}
+.svc:hover{border-color:rgba(255,106,0,.35);transform:translateY(-4px)}
+.svc h3{font-size:1.12rem;margin:18px 0 8px}
+.svc p{color:var(--muted);font-size:.95rem}
+
+.projects{display:grid;gap:26px}
+.proj{display:grid;grid-template-columns:1.25fr 1fr;overflow:hidden}
+.proj:nth-child(even){grid-template-columns:1fr 1.25fr}
+.proj:nth-child(even) .proj-media{order:2}
+.proj-media{background:#0f0f11;padding:22px;border-right:1px solid var(--line)}
+.proj:nth-child(even) .proj-media{border-right:0;border-left:1px solid var(--line)}
+.shot{aspect-ratio:1917/967;background:#0b0b0c;overflow:hidden;position:relative}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top left}
+.thumbs{display:flex;gap:8px;margin-top:12px}
+.thumbs button{border:1px solid var(--line2);background:#000;border-radius:8px;overflow:hidden;width:76px;aspect-ratio:16/9;cursor:pointer;opacity:.55;padding:0;transition:opacity .2s,border-color .2s}
+.thumbs button.on,.thumbs button:hover{opacity:1;border-color:var(--or)}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:top left}
+.proj-body{padding:34px;display:flex;flex-direction:column;justify-content:center}
+.tag{display:inline-block;font-size:.74rem;font-weight:700;color:var(--or);background:rgba(255,106,0,.1);border:1px solid rgba(255,106,0,.25);padding:4px 10px;border-radius:999px;margin-bottom:14px;width:max-content}
+.proj-body h3{font-size:1.5rem;margin-bottom:10px}
+.proj-body p{color:var(--muted);margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.chips span{font-size:.78rem;color:#d4d4d8;background:var(--card2);border:1px solid var(--line);padding:5px 10px;border-radius:8px}
+.link-out{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--or)}
+.link-out:hover{text-decoration:underline}
+.mock{position:absolute;inset:0;background:#E3E3DF;color:#141414;padding:7% 8%;display:flex;flex-direction:column;justify-content:center}
+.mock h4{font-size:clamp(1rem,2.4vw,1.7rem);font-weight:800;letter-spacing:-.02em;max-width:70%;line-height:1.15}
+.mock p{font-size:clamp(.6rem,1vw,.8rem);color:#555;margin:8px 0 14px;max-width:60%}
+.mock .mp{display:flex;gap:3%}
+.mock .mp div{flex:1;background:#fff;border-radius:8px;padding:6% 5%;font-size:clamp(.5rem,.9vw,.72rem);font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.07)}
+.mock .mp div small{display:block;font-weight:500;color:#777}
+.mock .pill{position:absolute;top:6%;right:6%;background:#141414;color:#fff;border-radius:999px;font-size:clamp(.5rem,.8vw,.68rem);padding:4px 10px;font-weight:700}
+
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
+.plan{padding:28px 24px;display:flex;flex-direction:column;position:relative;transition:transform .2s,border-color .2s}
+.plan:hover{transform:translateY(-4px);border-color:var(--line2)}
+.plan.pop{border-color:rgba(255,106,0,.55);background:linear-gradient(180deg,rgba(255,106,0,.09),var(--card) 45%)}
+.plan .ribbon{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--grad);font-size:.72rem;font-weight:800;padding:5px 12px;border-radius:999px;letter-spacing:.06em;white-space:nowrap}
+.plan .lvl{font-size:.75rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.plan h3{font-size:1.35rem;margin:6px 0 6px}
+.plan .desc{color:var(--muted);font-size:.9rem;min-height:66px}
+.price{margin:18px 0 4px;font-size:2.1rem;font-weight:900;letter-spacing:-.03em}
+.price{white-space:nowrap}
+.price small{font-size:.85rem;font-weight:600;color:var(--muted);letter-spacing:0}
+.inst{font-size:.8rem;color:var(--muted);min-height:20px;margin-bottom:18px}
+.plan ul{list-style:none;display:grid;gap:9px;margin-bottom:24px;flex:1}
+.plan li{display:flex;gap:9px;font-size:.9rem;color:#d4d4d8}
+.plan li svg{flex:none;margin-top:4px;color:var(--or)}
+.custom-strip{margin-top:22px;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(90deg,rgba(255,106,0,.1),var(--card) 60%)}
+.custom-strip>div{flex:1 1 420px}
+.custom-strip h3{font-size:1.25rem}.custom-strip p{color:var(--muted);font-size:.95rem}
+.note{font-size:.85rem;color:var(--dim);margin-top:18px;text-align:center}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{width:100%;border-collapse:collapse;min-width:720px;font-size:.92rem}
+th,td{padding:14px 18px;text-align:center;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left;color:#d4d4d8}
+thead th{background:#111113;font-weight:800;font-size:.9rem}
+thead th.hl{color:var(--or)}
+tbody tr:last-child td{border-bottom:0}
+td.y{color:var(--or);font-weight:800}td.n{color:#52525b}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{padding:26px}
+.step .num{width:44px;height:44px;border-radius:12px;background:var(--grad);display:grid;place-items:center;font-weight:900;margin-bottom:16px}
+.step h3{font-size:1.05rem;margin-bottom:6px}.step p{color:var(--muted);font-size:.9rem}
+
+.builder{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+.builder .card{padding:30px}
+.group{margin-bottom:26px}
+.group>.lbl{display:block;font-weight:700;margin-bottom:10px;font-size:.95rem}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--line2);border-radius:10px;font-size:.88rem;font-weight:600;color:#d4d4d8;cursor:pointer;transition:all .15s;background:rgba(255,255,255,.02)}
+.opt input:checked+span{border-color:var(--or);background:rgba(255,106,0,.12);color:#fff}
+.opt input:focus-visible+span{outline:2px solid var(--or);outline-offset:2px}
+.summary{position:sticky;top:96px}
+.summary h3{font-size:1.15rem;margin-bottom:14px}
+.summary ul{list-style:none;display:grid;gap:8px;font-size:.9rem;color:#d4d4d8;margin-bottom:20px;min-height:60px}
+.summary li b{color:var(--muted);font-weight:600;display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+.summary .empty{color:var(--dim);font-style:italic}
+
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-grid .full{grid-column:1/-1}
+.field label{display:block;font-size:.84rem;font-weight:600;color:#d4d4d8;margin-bottom:6px}
+.field label em{color:var(--or);font-style:normal}
+.field input,.field select,.field textarea{width:100%;background:#0f0f11;border:1px solid var(--line2);border-radius:11px;padding:12px 14px;outline:none;transition:border-color .15s,box-shadow .15s;font-size:.95rem}
+.field textarea{resize:vertical;min-height:110px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--or);box-shadow:0 0 0 3px rgba(255,106,0,.18)}
+.field select option{background:#151517}
+.field small{display:block;color:var(--dim);font-size:.76rem;margin-top:5px}
+.field.bad input,.field.bad select,.field.bad textarea{border-color:var(--err)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#d4d4d8;margin-bottom:12px;cursor:pointer}
+.chk input{margin-top:4px;accent-color:var(--or);width:17px;height:17px;flex:none}
+.chk a,.inline-link{color:var(--or);text-decoration:underline;cursor:pointer;background:none;border:0;padding:0;font-weight:600}
+.msg{margin-top:14px;font-size:.9rem;padding:12px 14px;border-radius:10px;display:none}
+.msg.err{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:#fca5a5}
+.msg.ok{display:block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);color:#86efac}
+
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pay{padding:30px}
+.pay h3{display:flex;align-items:center;gap:10px;font-size:1.2rem;margin-bottom:16px}
+.pm{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pm div{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.pm b{display:block;font-size:.95rem}.pm small{color:var(--muted);font-size:.8rem}
+.restrict{margin-top:20px;padding:18px 20px;border-radius:14px;border:1px dashed var(--line2);color:var(--muted);font-size:.86rem}
+.guarantee{margin-top:20px;padding:34px;display:flex;gap:26px;align-items:center;background:linear-gradient(90deg,rgba(255,106,0,.14),rgba(255,59,31,.04));border-color:rgba(255,106,0,.3)}
+.seal{width:96px;height:96px;flex:none;border-radius:50%;background:var(--grad);display:grid;place-items:center;text-align:center;font-weight:900;line-height:1;box-shadow:0 0 0 8px rgba(255,106,0,.12)}
+.seal b{font-size:2rem;display:block}.seal small{font-size:.66rem;letter-spacing:.08em}
+.guarantee h3{font-size:1.35rem;margin-bottom:6px}.guarantee p{color:#d4d4d8}
+
+.faq{max-width:820px;margin:0 auto;display:grid;gap:12px}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.faq details[open]{border-color:rgba(255,106,0,.3)}
+.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--or);font-size:1.4rem;line-height:1;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{color:var(--muted);margin-top:12px;font-size:.95rem}
+
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:26px}
+.c-list{display:grid;gap:12px;margin-top:28px}
+.c-item{display:flex;gap:14px;align-items:center;padding:16px 18px;transition:border-color .2s}
+.c-item:hover{border-color:rgba(255,106,0,.4)}
+.c-item small{display:block;color:var(--muted);font-size:.78rem}.c-item b{font-size:.98rem;word-break:break-all}
+.contact-grid form{padding:30px}
+
+footer{border-top:1px solid var(--line);padding:56px 0 30px;margin-top:40px;background:var(--bg2)}
+.f-cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;margin-bottom:36px}
+footer h4{font-size:.9rem;margin-bottom:14px}
+footer ul{list-style:none;display:grid;gap:9px;font-size:.9rem;color:var(--muted)}
+footer ul a:hover{color:var(--text)}
+footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
+.f-bottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.84rem;color:var(--dim)}
+.f-bottom a{color:var(--or);font-weight:700}
+
+.modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--line2);border-radius:22px;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;box-shadow:0 40px 100px -20px #000}
+.modal-head{position:sticky;top:0;background:var(--card);z-index:2;padding:22px 26px 16px;border-bottom:1px solid var(--line)}
+.modal-head .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.modal-head h3{font-size:1.25rem}
+.modal-head p{color:var(--muted);font-size:.88rem}
+.x{background:var(--card2);border:1px solid var(--line);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:1.3rem;line-height:1;flex:none}
+.stepper{display:flex;gap:8px;margin-top:16px}
+.stepper div{flex:1;font-size:.76rem;font-weight:700;color:var(--dim);padding-top:8px;border-top:3px solid var(--card2)}
+.stepper div.on{color:var(--text);border-color:var(--or)}
+.modal-body{padding:24px 26px 26px}
+.pane{display:none}.pane.on{display:block}
+.review{background:#0f0f11;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:20px;font-size:.9rem}
+.review div{display:flex;justify-content:space-between;gap:16px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.review div:last-child{border:0}
+.review span{color:var(--muted)}.review b{text-align:right;word-break:break-word}
+.review .total{font-size:1.1rem;padding-top:10px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{flex:1}
+.secure{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--dim);font-size:.8rem;margin-top:14px}
+.spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none}
+.loading .spin{display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+@media (max-width:1060px){
+  .plans{grid-template-columns:repeat(2,1fr)}
+  .menu{display:none}.burger{display:grid}
+}
+@media (max-width:900px){
+  .hero{padding-top:120px}
+  .hero-grid,.builder,.contact-grid,.pay-grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .proj,.proj:nth-child(even){grid-template-columns:1fr}
+  .proj:nth-child(even) .proj-media{order:0;border-left:0}
+  .proj-media{border-right:0;border-bottom:1px solid var(--line)}
+  .summary{position:static}
+  .f-cols{grid-template-columns:1fr 1fr}
+  .hero-visual .float{left:12px;bottom:-18px}
+}
+@media (max-width:600px){
+  .section{padding:72px 0}
+  .grid3,.steps,.plans,.f-grid,.pm{grid-template-columns:1fr}
+  .nav-right>.btn{display:none}
+  .cur button{padding:6px 9px}
+  .guarantee{flex-direction:column;text-align:center}
+  .f-cols{grid-template-columns:1fr}
+  .proj-body{padding:24px}
+  .modal{padding:0;align-items:flex-end}
+  .modal-box{border-radius:22px 22px 0 0;max-height:94vh}
+}
+</style>
+</head>
+<body>
+<!--
+  COMO FUNCIONA A TRADUÇÃO (PT/EN):
+  - O texto em português fica normal dentro da tag.
+  - A versão em inglês fica no atributo data-en="..." da mesma tag.
+  - Placeholders: data-en-ph="...". Links que mudam: data-en-href="...".
+  - Textos gerados pelo script (planos, mensagens) ficam no objeto TXT, no fim do arquivo.
+-->
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="wrap nav">
+    <!-- Sem logo por enquanto: só o nome em texto. Quando a logo ficar pronta, troque por <img>. -->
+    <a href="#topo" class="brand" aria-label="FNX DEV">FNX <span>DEV</span></a>
+    <nav class="menu" aria-label="Menu">
+      <a href="#servicos" data-en="Services">Serviços</a>
+      <a href="#projetos" data-en="Projects">Projetos</a>
+      <a href="#planos" data-en="Pricing">Planos</a>
+      <a href="#personalizado" data-en="Custom">Personalizado</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contato" data-en="Contact">Contato</a>
+    </nav>
+    <div class="nav-right">
+      <div class="cur" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="pt" class="on">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="cur" role="group" aria-label="Moeda / Currency">
+        <button type="button" data-cur="brl" class="on">R$</button>
+        <button type="button" data-cur="usd">US$</button>
+      </div>
+      <a href="#planos" class="btn btn-primary" style="padding:10px 18px" data-en="See plans">Ver planos</a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile" id="mobile">
+    <a href="#servicos" data-en="Services">Serviços</a><a href="#projetos" data-en="Projects">Projetos</a><a href="#planos" data-en="Pricing">Planos</a>
+    <a href="#personalizado" data-en="Custom">Personalizado</a><a href="#faq">FAQ</a><a href="#contato" data-en="Contact">Contato</a>
+  </div>
+</header>
+
+<main id="topo">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge"><span class="dot"></span> <span data-en="Now booking new projects">Agenda aberta para novos projetos</span></div>
+      <h1 data-en="Custom-built <span class='grad-text'>websites and systems</span> for your business.">Sites e sistemas <span class="grad-text">sob medida</span> para o seu negócio.</h1>
+      <p class="lead" data-en="FNX DEV builds landing pages, professional websites and complete web systems — with login, dashboards, access levels and online payments — ready to use on phone, tablet and desktop.">A FNX DEV cria landing pages, sites profissionais e sistemas web completos — com login, painéis, níveis de acesso e pagamentos online — prontos para usar no celular, tablet e computador.</p>
+      <ul class="checks">
+        <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg><span data-en="Secure payment by Stripe — international cards in US dollars">Pagamento seguro pela Stripe — Pix, cartão em até 12x e boleto no Brasil, cartão internacional fora dele</span></li>
+        <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg><span data-en="7-day guarantee: changed your mind? You get 100% back">Garantia de 7 dias: desistiu, devolvemos 100% do valor</span></li>
+        <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg><span data-en="Real projects live today — see what we've built below">Projetos reais no ar — veja abaixo o que já desenvolvemos</span></li>
+      </ul>
+      <div class="cta-row">
+        <a href="#planos" class="btn btn-primary" data-en="See plans and pricing">Ver planos e preços</a>
+        <a href="#personalizado" class="btn btn-ghost" data-en="Build a custom project">Montar projeto personalizado</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="browser">
+        <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
+        <img src="assets/projetos/fnx-tech-2.webp" alt="FNX TECH" width="1917" height="968" fetchpriority="high">
+      </div>
+      <div class="float">
+        <div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/></svg></div>
+        <div><b data-en="3 projects live">3 projetos no ar</b><small data-en="Websites and systems in production">Sites e sistemas em produção</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVIÇOS ================= -->
+<section class="section" id="servicos">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow" data-en="Services">Serviços</span>
+      <h2 data-en="From a simple website to a complete system">Do site institucional ao sistema completo</h2>
+      <div class="bar"></div>
+      <p class="lead" data-en="Everything is built from scratch, responsive and designed around your process — no generic templates.">Tudo é desenvolvido do zero, responsivo e pensado para o seu processo — não é template genérico.</p>
+    </div>
+    <div class="grid3">
+      <div class="card svc reveal"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>Landing pages</h3><p data-en="Sales and lead-capture pages focused on conversion, with forms, WhatsApp and fast loading.">Páginas de venda e captação focadas em conversão, com formulário, WhatsApp e carregamento rápido.</p></div>
+      <div class="card svc reveal"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7h18M3 7v12a2 2 0 002 2h14a2 2 0 002-2V7M3 7l2-4h14l2 4"/></svg></div><h3 data-en="Professional websites">Sites profissionais</h3><p data-en="Multi-page business websites with technical SEO, your own domain and professional email set up.">Sites institucionais com várias páginas, SEO técnico, domínio próprio e e-mail profissional configurados.</p></div>
+      <div class="card svc reveal"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16M18 8l4 4-4 4M6 16l-4-4 4-4"/></svg></div><h3 data-en="Custom web systems">Sistemas web sob medida</h3><p data-en="Internal management, finance, CRM, Trello-style boards, calendar, invoices and reports — with login and access levels.">Gestão interna, financeiro, CRM, quadros estilo Trello, agenda, notas e relatórios — com login e níveis de acesso.</p></div>
+      <div class="card svc reveal"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div><h3 data-en="Payments and checkout">Pagamentos e checkout</h3><p data-en="Sell online with Stripe in reais, dollars or pounds, with automatic emails and contracts.">Venda online com Stripe, Pix, boleto e cartão, em reais, dólar ou libra, com e-mails automáticos e contrato.</p></div>
+      <div class="card svc reveal"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h5M20 20v-5h-5M5 15a7 7 0 0012 3M19 9A7 7 0 007 6"/></svg></div><h3 data-en="Automations and integrations">Automações e integrações</h3><p data-en="Transactional emails, notifications, API integrations and routines that take repetitive work off your team.">E-mails transacionais, notificações, integrações com APIs e rotinas que tiram tarefas repetitivas do seu time.</p></div>
+      <div class="card svc reveal"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg></div><h3 data-en="Hosting and maintenance">Hospedagem e manutenção</h3><p data-en="Cloud deployment (Cloudflare), domain, SSL and maintenance plans to keep improving after launch.">Publicação na nuvem (Cloudflare), domínio, SSL e planos de manutenção para evoluir o projeto depois da entrega.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJETOS ================= -->
+<section class="section" id="projetos" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow" data-en="Projects">Projetos</span>
+      <h2 data-en="Live right now">O que já está no ar</h2>
+      <div class="bar"></div>
+      <p class="lead" data-en="Projects built by FNX DEV and in use today. The systems are private (login required) — the images show the internal screens.">Projetos desenvolvidos pela FNX DEV e em uso hoje. Os sistemas são privados (acesso por login) — as imagens mostram as telas internas.</p>
+    </div>
+
+    <div class="projects">
+      <article class="card proj reveal">
+        <div class="proj-media">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span>molinagrowthagency.com</span></div>
+            <div class="shot">
+              <!-- Mockup automático. Para usar um print real, salve em assets/projetos/molina.webp -->
+              <div class="mock" aria-hidden="true">
+                <span class="pill">£ / $</span>
+                <h4>More enquiries for your local business.</h4>
+                <p>Google Ads &amp; Meta Ads planned, run and reported for local businesses in the UK and US.</p>
+                <div class="mp"><div>Starter<small>one ad platform</small></div><div>Premium<small>Google, Meta &amp; social</small></div><div>Custom<small>pick your services</small></div></div>
+              </div>
+              <img src="assets/projetos/molina.webp" alt="Molina Growth Agency" onerror="this.remove()" style="position:relative" loading="lazy">
+            </div>
+          </div>
+        </div>
+        <div class="proj-body">
+          <span class="tag" data-en="International sales website">Site de vendas internacional</span>
+          <h3>Molina Growth Agency</h3>
+          <p data-en="Pricing website for a marketing agency serving local businesses in the UK and the US. Checkout in pounds and dollars, multi-month discounts, customer onboarding, contract signed before payment and automatic emails.">Site de planos para uma agência de marketing que atende negócios locais no Reino Unido e nos EUA. Checkout em libra e dólar, descontos por período, cadastro do cliente, contrato assinado antes do pagamento e e-mails automáticos.</p>
+          <div class="chips"><span>Stripe</span><span data-en="Pounds &amp; dollars">Libra e dólar</span><span data-en="Digital contract">Contrato digital</span><span>Cloudflare Workers</span><span>Resend</span></div>
+          <a class="link-out" href="https://molinagrowthagency.com" target="_blank" rel="noopener"><span data-en="Visit website">Visitar site</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </article>
+
+      <article class="card proj reveal" data-gallery>
+        <div class="proj-media">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
+            <div class="shot"><img src="assets/projetos/fnx-tech-1.webp" alt="FNX TECH" loading="lazy" data-main></div>
+          </div>
+          <div class="thumbs">
+            <button class="on" data-src="assets/projetos/fnx-tech-1.webp" aria-label="1"><img src="assets/projetos/fnx-tech-1.webp" alt="" loading="lazy"></button>
+            <button data-src="assets/projetos/fnx-tech-2.webp" aria-label="2"><img src="assets/projetos/fnx-tech-2.webp" alt="" loading="lazy"></button>
+          </div>
+        </div>
+        <div class="proj-body">
+          <span class="tag" data-en="Management system">Sistema de gestão</span>
+          <h3>FNX TECH</h3>
+          <p data-en="Complete internal system for a tech company: team and access control, finance, metrics and reports, projects, CRM/pipeline, Trello-style boards, billing, file drive, meetings and time bank.">Sistema interno completo para empresa de tecnologia: equipe e acessos, financeiro, métricas e relatórios, projetos, CRM/pipeline, boards estilo Trello, cobranças, drive de arquivos, reuniões e banco de horas.</p>
+          <div class="chips"><span data-en="Login &amp; access levels">Login e níveis de acesso</span><span data-en="Kanban boards">Boards (Kanban)</span><span data-en="Finance">Financeiro</span><span data-en="Calendar">Agenda</span><span data-en="Responsive">Responsivo</span></div>
+          <a class="link-out" href="https://sistema.fnxholding.com" target="_blank" rel="noopener"><span data-en="Open system">Acessar sistema</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </article>
+
+      <article class="card proj reveal" data-gallery>
+        <div class="proj-media">
+          <div class="browser">
+            <div class="browser-bar"><i></i><i></i><i></i><span>sistema.engjob.com.br</span></div>
+            <div class="shot"><img src="assets/projetos/engjob-1.webp" alt="Eng Job" loading="lazy" data-main></div>
+          </div>
+          <div class="thumbs">
+            <button class="on" data-src="assets/projetos/engjob-1.webp" aria-label="1"><img src="assets/projetos/engjob-1.webp" alt="" loading="lazy"></button>
+            <button data-src="assets/projetos/engjob-2.webp" aria-label="2"><img src="assets/projetos/engjob-2.webp" alt="" loading="lazy"></button>
+            <button data-src="assets/projetos/engjob-login.webp" aria-label="3"><img src="assets/projetos/engjob-login.webp" alt="" loading="lazy"></button>
+          </div>
+        </div>
+        <div class="proj-body">
+          <span class="tag" data-en="Engineering system">Sistema para engenharia</span>
+          <h3 data-en="Eng Job — Engineering &amp; Maintenance">Eng Job — Engenharia e Manutenção</h3>
+          <p data-en="Management system for an engineering company: registrations, employees, bank statements, commissions, job sites, materials and storage, payment slips, invoices, proposals, technical visits, time tracking and calendar.">Sistema de gestão para empresa de engenharia: cadastro, funcionários, extratos bancários, comissões, obras, materiais e armazenamento, boletos, notas fiscais, propostas, visitas técnicas, controle de ponto e calendário.</p>
+          <div class="chips"><span data-en="Job sites &amp; proposals">Obras e propostas</span><span data-en="Invoices">Notas e boletos</span><span data-en="Time tracking">Controle de ponto</span><span data-en="Reports">Relatórios</span><span>Cloudflare</span></div>
+          <a class="link-out" href="https://sistema.engjob.com.br" target="_blank" rel="noopener"><span data-en="Open system">Acessar sistema</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLANOS ================= -->
+<section class="section" id="planos">
+  <div class="wrap">
+    <div class="head center reveal">
+      <span class="eyebrow" data-en="Pricing">Planos</span>
+      <h2 data-en="Choose your plan">Escolha o plano do seu projeto</h2>
+      <div class="bar"></div>
+      <p class="lead" data-en="One-time payment with a 7-day guarantee. Clients in Brazil pay in reais; clients abroad pay in US dollars.">Pagamento único, com garantia de 7 dias. Clientes no Brasil pagam em reais; clientes no exterior, em dólar.</p>
+    </div>
+
+    <div class="plans" id="plans"></div>
+
+    <div class="card custom-strip reveal">
+      <div>
+        <h3 data-en="Need something different? Custom plan">Precisa de algo diferente? Plano Personalizado</h3>
+        <p data-en="An app, e-commerce, a specific integration or a larger system: build your project and get a tailored quote.">App, e-commerce, integração específica ou um sistema maior: monte o seu projeto e receba um orçamento sob medida.</p>
+      </div>
+      <a href="#personalizado" class="btn btn-white" data-en="Build my project">Montar meu projeto</a>
+    </div>
+    <p class="note" data-en="Hosting, domain and third-party services (e.g. email, paid APIs) are not included unless stated. Changes after the support period fall under the maintenance plan.">Hospedagem, domínio e serviços de terceiros (ex.: e-mail, APIs pagas) não estão inclusos, salvo quando indicado. Ajustes depois do período de suporte entram no plano de manutenção.</p>
+  </div>
+</section>
+
+<!-- ================= COMPARAR ================= -->
+<section class="section" id="comparar" style="padding-top:20px">
+  <div class="wrap">
+    <div class="head center reveal">
+      <span class="eyebrow" data-en="Compare">Comparar</span>
+      <h2 data-en="What each plan includes">O que cada plano inclui</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th data-en="Feature">Recurso</th><th>Landing Page</th><th>Starter</th><th class="hl">Business</th><th data-en="Web System">Sistema Web</th></tr></thead>
+        <tbody>
+          <tr><td data-en="Pages / screens">Páginas / telas</td><td>1</td><td data-en="up to 4">até 4</td><td data-en="up to 8">até 8</td><td data-en="up to 3 modules">até 3 módulos</td></tr>
+          <tr><td data-en="Responsive design">Design responsivo</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+          <tr><td data-en="Form + WhatsApp button">Formulário + botão de WhatsApp</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+          <tr><td data-en="Technical SEO">SEO técnico</td><td data-en="basic">básico</td><td data-en="basic">básico</td><td data-en="advanced">avançado</td><td class="n">—</td></tr>
+          <tr><td data-en="Deployment + domain setup">Publicação + domínio configurado</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+          <tr><td data-en="Automatic emails">E-mails automáticos</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+          <tr><td data-en="Admin panel">Painel administrativo</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td><td class="y">✓</td></tr>
+          <tr><td data-en="Online payment / checkout">Pagamento online / checkout</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td><td class="n">—</td></tr>
+          <tr><td data-en="User login and access levels">Login de usuários e níveis de acesso</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+          <tr><td data-en="Cloud database and reports">Banco de dados na nuvem e relatórios</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="y">✓</td></tr>
+          <tr><td data-en="Revision rounds">Rodadas de revisão</td><td>1</td><td>2</td><td>2</td><td>3</td></tr>
+          <tr><td data-en="Support after delivery">Suporte após a entrega</td><td data-en="7 days">7 dias</td><td data-en="15 days">15 dias</td><td data-en="30 days">30 dias</td><td data-en="30 days">30 dias</td></tr>
+          <tr><td data-en="Estimated delivery">Prazo estimado</td><td data-en="10 business days">10 dias úteis</td><td data-en="15 business days">15 dias úteis</td><td data-en="25 business days">25 dias úteis</td><td data-en="30 business days">30 dias úteis</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" data-en="Deadlines start once we receive the briefing and content. Launch and handover happen after the 7-day guarantee period.">Prazos contados a partir do recebimento do briefing e dos conteúdos. A publicação e a entrega acontecem depois do período de garantia de 7 dias.</p>
+  </div>
+</section>
+
+<!-- ================= COMO FUNCIONA ================= -->
+<section class="section" id="processo" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow" data-en="How it works">Como funciona</span>
+      <h2 data-en="What happens after you pay">O que acontece depois que você paga</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="steps">
+      <div class="card step reveal"><div class="num">1</div><h3 data-en="Email confirmation">Confirmação por e-mail</h3><p data-en="You get the Stripe receipt and an email from FNX DEV with your order summary.">Você recebe o recibo da Stripe e um e-mail da FNX DEV com o resumo do pedido.</p></div>
+      <div class="card step reveal"><div class="num">2</div><h3 data-en="Contact within 1 business day">Contato em até 1 dia útil</h3><p data-en="We reach out by WhatsApp or email to go over the briefing and send the contract.">Entramos em contato por WhatsApp ou e-mail para alinhar o briefing e enviar o contrato.</p></div>
+      <div class="card step reveal"><div class="num">3</div><h3 data-en="Development">Desenvolvimento</h3><p data-en="You follow partial previews and request changes within your plan's revision rounds.">Você acompanha as prévias e pede ajustes dentro das rodadas de revisão do plano.</p></div>
+      <div class="card step reveal"><div class="num">4</div><h3 data-en="Launch and support">Entrega e suporte</h3><p data-en="After the 7-day guarantee period, we launch the project, hand over access and keep supporting you.">Após o período de garantia de 7 dias, publicamos o projeto, entregamos os acessos e seguimos com suporte.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PERSONALIZADO ================= -->
+<section class="section" id="personalizado">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow" data-en="Custom plan">Plano Personalizado</span>
+      <h2 data-en="Build your project">Monte o seu projeto</h2>
+      <div class="bar"></div>
+      <p class="lead" data-en="Pick what you need. Your request goes straight to our email and you can continue on WhatsApp with the summary filled in.">Marque o que você precisa. O pedido chega direto no nosso e-mail e você pode continuar no WhatsApp com o resumo já preenchido.</p>
+    </div>
+
+    <form id="custom-form" class="builder" novalidate>
+      <div class="card">
+        <div class="group">
+          <div class="lbl"><span data-en="Project type">Tipo de projeto</span> <em style="color:var(--or)">*</em></div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="tipo" value="Landing page"><span>Landing page</span></label>
+            <label class="opt"><input type="radio" name="tipo" value="Site profissional"><span data-en="Website">Site profissional</span></label>
+            <label class="opt"><input type="radio" name="tipo" value="Sistema web"><span data-en="Web system">Sistema web</span></label>
+            <label class="opt"><input type="radio" name="tipo" value="Loja virtual"><span data-en="Online store">Loja virtual</span></label>
+            <label class="opt"><input type="radio" name="tipo" value="Aplicativo"><span data-en="App">Aplicativo</span></label>
+            <label class="opt"><input type="radio" name="tipo" value="Automação / integração"><span data-en="Automation / integration">Automação / integração</span></label>
+            <label class="opt"><input type="radio" name="tipo" value="Outro"><span data-en="Other">Outro</span></label>
+          </div>
+        </div>
+        <div class="group">
+          <div class="lbl" data-en="Features">Funcionalidades</div>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" name="recursos" value="Login de usuários"><span data-en="User login">Login de usuários</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Níveis de acesso"><span data-en="Access levels">Níveis de acesso</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Painel administrativo"><span data-en="Admin panel">Painel administrativo</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Pagamentos online"><span data-en="Online payments">Pagamentos online</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Área do cliente"><span data-en="Client area">Área do cliente</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Agenda / calendário"><span data-en="Calendar">Agenda / calendário</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Kanban (estilo Trello)"><span data-en="Kanban (Trello-style)">Kanban (estilo Trello)</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Relatórios e dashboards"><span data-en="Reports &amp; dashboards">Relatórios e dashboards</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Financeiro"><span data-en="Finance">Financeiro</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Upload de arquivos"><span data-en="File upload">Upload de arquivos</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="E-mails automáticos"><span data-en="Automatic emails">E-mails automáticos</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Blog"><span>Blog</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Vários idiomas"><span data-en="Multiple languages">Vários idiomas</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Integração WhatsApp"><span data-en="WhatsApp integration">Integração WhatsApp</span></label>
+            <label class="opt"><input type="checkbox" name="recursos" value="Integração / API"><span data-en="Integration / API">Integração / API</span></label>
+          </div>
+        </div>
+        <div class="group">
+          <div class="lbl" data-en="Number of pages or screens">Quantidade de páginas ou telas</div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="paginas" value="1 a 5"><span data-en="1 to 5">1 a 5</span></label>
+            <label class="opt"><input type="radio" name="paginas" value="6 a 15"><span data-en="6 to 15">6 a 15</span></label>
+            <label class="opt"><input type="radio" name="paginas" value="16 a 30"><span data-en="16 to 30">16 a 30</span></label>
+            <label class="opt"><input type="radio" name="paginas" value="Mais de 30"><span data-en="More than 30">Mais de 30</span></label>
+            <label class="opt"><input type="radio" name="paginas" value="Não sei"><span data-en="Not sure">Não sei</span></label>
+          </div>
+        </div>
+        <div class="group">
+          <div class="lbl" data-en="Desired timeline">Prazo desejado</div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="prazo" value="Urgente"><span data-en="Urgent">Urgente</span></label>
+            <label class="opt"><input type="radio" name="prazo" value="Até 1 mês"><span data-en="Within 1 month">Até 1 mês</span></label>
+            <label class="opt"><input type="radio" name="prazo" value="1 a 3 meses"><span data-en="1 to 3 months">1 a 3 meses</span></label>
+            <label class="opt"><input type="radio" name="prazo" value="Sem pressa"><span data-en="No rush">Sem pressa</span></label>
+          </div>
+        </div>
+        <div class="group">
+          <div class="lbl" data-en="Expected budget">Investimento previsto</div>
+          <div class="opts" id="budget-opts"></div>
+        </div>
+        <div class="f-grid">
+          <div class="field"><label><span data-en="Your name">Seu nome</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
+          <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"></div>
+          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (00) 00000-0000" data-en-ph="+1 555 000 0000"></div>
+          <div class="field"><label><span data-en="Country">País</span> <em>*</em></label><select name="pais" required data-countries></select></div>
+          <div class="field"><label data-en="Company">Empresa</label><input name="empresa" autocomplete="organization"></div>
+          <div class="field"><label data-en="Current website or reference">Site atual ou referência</label><input name="referencia" placeholder="https://"></div>
+          <div class="field full"><label><span data-en="Tell us about the project">Conte sobre o projeto</span> <em>*</em></label><textarea name="descricao" required maxlength="2000" placeholder="O que o sistema/site precisa fazer, quem vai usar, exemplos que você gosta..." data-en-ph="What the website/system needs to do, who will use it, examples you like..."></textarea></div>
+        </div>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="chk" style="margin-top:16px"><input type="checkbox" name="aceite" required> <span data-en="I have read and agree to the <a href='policies.html#privacy' target='_blank'>Privacy Policy</a> and authorize contact via the email and WhatsApp provided.">Li e concordo com a <a href="politicas.html#privacidade" target="_blank">Política de Privacidade</a> e autorizo o contato pelo e-mail e WhatsApp informados.</span></label>
+      </div>
+
+      <aside class="card summary">
+        <h3 data-en="Request summary">Resumo do pedido</h3>
+        <ul id="custom-summary"></ul>
+        <button type="submit" class="btn btn-primary btn-block" id="custom-btn"><span class="spin"></span><span data-en="Send quote request">Enviar pedido de orçamento</span></button>
+        <div class="msg" id="custom-msg"></div>
+        <div id="custom-after" style="display:none;margin-top:14px">
+          <a href="#" target="_blank" rel="noopener" class="btn btn-ghost btn-block" id="wa-continue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#22c55e"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 01-2.4-1.5 9 9 0 01-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 00-.8.4 3.3 3.3 0 00-1 2.5 5.8 5.8 0 001.2 3.1 13.3 13.3 0 005.1 4.5c.7.3 1.3.5 1.7.6a4 4 0 001.9.1 3.1 3.1 0 002-1.4 2.5 2.5 0 00.2-1.4c-.1-.1-.3-.2-.6-.4M12 21.8a9.9 9.9 0 01-5-1.4l-.4-.2-3.7 1 1-3.7-.2-.4A9.9 9.9 0 1112 21.8M20.5 3.5A11.8 11.8 0 002 17.8L.1 24l6.3-1.7A11.9 11.9 0 0012 23.8 11.9 11.9 0 0020.5 3.5"/></svg>
+            <span data-en="Send summary on WhatsApp">Enviar resumo no WhatsApp</span>
+          </a>
+        </div>
+      </aside>
+    </form>
+  </div>
+</section>
+
+<!-- ================= PAGAMENTO ================= -->
+<section class="section" id="pagamento" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow" data-en="Payment">Pagamento</span>
+      <h2 data-en="Payment methods">Formas de pagamento</h2>
+      <div class="bar"></div>
+      <p class="lead" data-en="Every payment is processed by Stripe. FNX DEV never sees or stores your card details.">Todo pagamento é processado pela Stripe. A FNX DEV não vê nem armazena os dados do seu cartão.</p>
+    </div>
+    <div class="pay-grid">
+      <div class="card pay reveal">
+        <h3><span class="ico" style="width:34px;height:34px">🇧🇷</span> <span data-en="Clients in Brazil (R$)">Clientes no Brasil (R$)</span></h3>
+        <div class="pm">
+          <div><b>Pix</b><small data-en="Instant confirmation">Confirmação na hora</small></div>
+          <div><b data-en="Credit card">Cartão de crédito</b><small data-en="Up to 12 installments">Em até 12x</small></div>
+          <div><b>Boleto</b><small data-en="Confirms within 1 business day">Confirma em até 1 dia útil</small></div>
+          <div><b data-en="Receipt">Recibo</b><small data-en="Sent by email">Enviado por e-mail</small></div>
+        </div>
+      </div>
+      <div class="card pay reveal">
+        <h3><span class="ico" style="width:34px;height:34px">🌎</span> <span data-en="Clients abroad (US$)">Clientes no exterior (US$)</span></h3>
+        <div class="pm">
+          <div><b data-en="International card">Cartão internacional</b><small>Visa, Mastercard, Amex</small></div>
+          <div><b data-en="Charged in US dollars">Cobrança em dólar</b><small data-en="Your bank handles conversion">Seu banco faz a conversão</small></div>
+          <div><b>Apple Pay / Google Pay</b><small data-en="When available">Quando disponível</small></div>
+          <div><b data-en="Receipt">Recibo</b><small data-en="Sent by email">Enviado por e-mail</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="restrict reveal">
+      <span data-en="<b style='color:#d4d4d8'>Countries we don't serve.</b> Due to international sanctions and Stripe's rules, we do not sell to people or companies located in, resident in or citizens of:"><b style="color:#d4d4d8">Países não atendidos.</b> Por exigências de sanções internacionais e das regras da Stripe, não vendemos para pessoas ou empresas localizadas, residentes ou cidadãs de:</span>
+      <span id="blocked-list"></span><span data-en=", nor the Crimea, Donetsk, Luhansk, Kherson and Zaporizhzhia regions. Purchases linked to these places are cancelled and refunded.">, nem das regiões da Crimeia, Donetsk, Luhansk, Kherson e Zaporizhzhia. Compras ligadas a esses locais são canceladas e estornadas.</span>
+      <a class="inline-link" href="politicas.html#paises" data-en-href="policies.html#countries" data-en="Learn more">Saiba mais</a>.
+    </div>
+
+    <div class="card guarantee reveal">
+      <div class="seal"><div><b>7</b><small data-en="DAYS">DIAS</small></div></div>
+      <div>
+        <h3 data-en="7-day guarantee — full refund">Garantia de 7 dias — reembolso integral</h3>
+        <p data-en="Changed your mind within 7 calendar days of payment? Just email us and we refund 100%, no questions asked. To protect both sides, the project is launched and handed over only after this period.">Desistiu em até 7 dias corridos depois do pagamento? É só pedir por e-mail e devolvemos 100% do valor, sem precisar justificar. Para proteger os dois lados, a publicação e a entrega do projeto acontecem só depois desse prazo.</p>
+        <p style="margin-top:6px"><a class="inline-link" href="politicas.html#reembolso" data-en-href="policies.html#refund" data-en="See refund policy">Ver política de reembolso</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section" id="faq" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head center reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 data-en="Frequently asked questions">Perguntas frequentes</h2>
+      <div class="bar"></div>
+    </div>
+    <div class="faq reveal">
+      <details><summary data-en="How long does it take?">Quanto tempo leva para ficar pronto?</summary><p data-en="Landing pages take up to 10 business days, Starter up to 15, Business up to 25 and Web System up to 30, counted from when we receive the briefing and content (text, images, logo).">Landing pages levam até 10 dias úteis, Starter até 15, Business até 25 e Sistema Web até 30, contados a partir do recebimento do briefing e dos conteúdos (textos, imagens, logo).</p></details>
+      <details><summary data-en="Can I pay in installments?">Posso parcelar?</summary><p data-en="In Brazil, credit cards can be split into up to 12 installments at checkout. For the Custom plan, payment can be split by milestones, agreed in the quote.">Sim. No Brasil, o cartão de crédito pode ser parcelado em até 12x direto no checkout. No Plano Personalizado, o pagamento pode ser dividido por etapas, combinado no orçamento.</p></details>
+      <details><summary data-en="How does the 7-day refund work?">Como funciona o reembolso de 7 dias?</summary><p data-en="If you change your mind within 7 calendar days of payment, email suporte.fnxtech@gmail.com with the email used at checkout and we refund 100% via the original payment method. During this period we work on the briefing and first drafts; launch and handover happen only after it ends.">Se você desistir em até 7 dias corridos depois do pagamento, basta enviar um e-mail para suporte.fnxtech@gmail.com com o e-mail usado na compra. Devolvemos 100% pelo mesmo meio de pagamento. Nesse período fazemos o briefing e as primeiras prévias; a publicação e a entrega dos arquivos acontecem só depois que o prazo termina.</p></details>
+      <details><summary data-en="Do you work with clients outside Brazil?">Atendem clientes fora do Brasil?</summary><p data-en="Yes. Clients abroad pay in US dollars with an international card. The exception is the sanctioned countries and regions listed in the payment section.">Sim. Clientes no exterior pagam em dólar com cartão internacional. A exceção são os países e regiões sob sanções internacionais listados na seção de pagamento.</p></details>
+      <details><summary data-en="Will the website/system be mine?">O site/sistema fica no meu nome?</summary><p data-en="Yes. Domain and hosting accounts can be in your name. After full payment you receive the access and project files, as set out in the contract.">Sim. Domínio e contas de hospedagem podem ficar no seu nome. Após a quitação, você recebe os acessos e os arquivos do projeto, conforme o contrato.</p></details>
+      <details><summary data-en="Do I need to pay for hosting?">Preciso pagar hospedagem?</summary><p data-en="Many projects run on Cloudflare's free plan. Domain names and paid third-party services are paid by the client, and we recommend the cheapest option for your case.">Muitos projetos rodam no plano gratuito da Cloudflare. Domínio (.com, .com.br) e serviços pagos de terceiros são por conta do cliente, e indicamos a opção mais barata para o seu caso.</p></details>
+      <details><summary data-en="What if I need changes after delivery?">E se eu precisar de mudanças depois da entrega?</summary><p data-en="Adjustments during your plan's support period are included. After that, we offer monthly maintenance or on-demand quotes.">Ajustes dentro do período de suporte do plano estão inclusos. Depois disso, oferecemos manutenção mensal ou orçamento por demanda.</p></details>
+      <details><summary data-en="When do I receive the contract?">Quando recebo o contrato?</summary><p data-en="The service agreement is emailed after payment is confirmed, with your details and the scope of the plan you bought.">O contrato de prestação de serviços é enviado por e-mail após a confirmação do pagamento, com seus dados e o escopo do plano contratado.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTATO ================= -->
+<section class="section" id="contato" style="padding-top:40px">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <span class="eyebrow" data-en="Contact">Contato</span>
+      <h2 data-en="Let's talk about your project">Vamos conversar sobre o seu projeto</h2>
+      <div class="bar"></div>
+      <p class="lead" data-en="Reach our sales or support team on the channel you prefer.">Fale com o time comercial ou com o suporte pelo canal que preferir.</p>
+      <div class="c-list">
+        <a class="card c-item" href="mailto:vendas.fnxholding@gmail.com"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div><small data-en="Sales and quotes">Vendas e orçamentos</small><b>vendas.fnxholding@gmail.com</b></div></a>
+        <a class="card c-item" href="mailto:suporte.fnxtech@gmail.com"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 10a6 6 0 10-12 0v4a2 2 0 002 2h1v-6H6M18 10v6h-3v-6h3zM15 20h-3"/></svg></div><div><small data-en="Support">Suporte</small><b>suporte.fnxtech@gmail.com</b></div></a>
+        <a class="card c-item" href="https://wa.me/5541995553699" target="_blank" rel="noopener"><div class="ico" style="background:rgba(34,197,94,.12);color:#22c55e"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 01-2.4-1.5 9 9 0 01-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 00-.8.4 3.3 3.3 0 00-1 2.5 5.8 5.8 0 001.2 3.1 13.3 13.3 0 005.1 4.5c.7.3 1.3.5 1.7.6a4 4 0 001.9.1 3.1 3.1 0 002-1.4 2.5 2.5 0 00.2-1.4c-.1-.1-.3-.2-.6-.4M12 21.8a9.9 9.9 0 01-5-1.4l-.4-.2-3.7 1 1-3.7-.2-.4A9.9 9.9 0 1112 21.8M20.5 3.5A11.8 11.8 0 002 17.8L.1 24l6.3-1.7A11.9 11.9 0 0012 23.8 11.9 11.9 0 0020.5 3.5"/></svg></div><div><small>WhatsApp</small><b>+55 41 99555-3699</b></div></a>
+        <a class="card c-item" href="https://instagram.com/yanszaida" target="_blank" rel="noopener"><div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></div><div><small>Instagram</small><b>@yanszaida</b></div></a>
+      </div>
+    </div>
+    <form id="contact-form" class="card reveal" novalidate>
+      <h3 style="font-size:1.2rem;margin-bottom:18px" data-en="Send a message">Envie uma mensagem</h3>
+      <div class="f-grid">
+        <div class="field"><label><span data-en="Name">Nome</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
+        <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"></div>
+        <div class="field full"><label>WhatsApp</label><input name="telefone" type="tel" autocomplete="tel"></div>
+        <div class="field full"><label data-en="Subject">Assunto</label>
+          <select name="assunto">
+            <option value="Quero contratar um plano" data-en="I want to buy a plan">Quero contratar um plano</option>
+            <option value="Orçamento personalizado" data-en="Custom quote">Orçamento personalizado</option>
+            <option value="Suporte de um projeto" data-en="Project support">Suporte de um projeto</option>
+            <option value="Reembolso / cancelamento" data-en="Refund / cancellation">Reembolso / cancelamento</option>
+            <option value="Outro assunto" data-en="Other">Outro assunto</option>
+          </select>
+        </div>
+        <div class="field full"><label><span data-en="Message">Mensagem</span> <em>*</em></label><textarea name="mensagem" required maxlength="2000"></textarea></div>
+      </div>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="chk" style="margin-top:14px"><input type="checkbox" name="aceite" required> <span data-en="I have read and agree to the <a href='policies.html#privacy' target='_blank'>Privacy Policy</a>.">Li e concordo com a <a href="politicas.html#privacidade" target="_blank">Política de Privacidade</a>.</span></label>
+      <button type="submit" class="btn btn-primary btn-block" id="contact-btn"><span class="spin"></span><span data-en="Send message">Enviar mensagem</span></button>
+      <div class="msg" id="contact-msg"></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="f-cols">
+      <div>
+        <div class="brand">FNX <span>DEV</span></div>
+        <p data-en="Custom websites, landing pages and web systems, with secure payment and a 7-day guarantee.">Sites, landing pages e sistemas web sob medida, com pagamento seguro e garantia de 7 dias.</p>
+      </div>
+      <div>
+        <h4 data-en="Navigation">Navegação</h4>
+        <ul><li><a href="#servicos" data-en="Services">Serviços</a></li><li><a href="#projetos" data-en="Projects">Projetos</a></li><li><a href="#planos" data-en="Pricing">Planos</a></li><li><a href="#personalizado" data-en="Custom">Personalizado</a></li><li><a href="#faq">FAQ</a></li></ul>
+      </div>
+      <div>
+        <h4 data-en="Policies">Políticas</h4>
+        <ul>
+          <li><a href="politicas.html#termos" data-en-href="policies.html#terms" data-en="Terms of Service">Termos de Uso e Serviço</a></li>
+          <li><a href="politicas.html#privacidade" data-en-href="policies.html#privacy" data-en="Privacy Policy">Política de Privacidade</a></li>
+          <li><a href="politicas.html#reembolso" data-en-href="policies.html#refund" data-en="Purchase &amp; Refund">Compra e Reembolso</a></li>
+          <li><a href="politicas.html#paises" data-en-href="policies.html#countries" data-en="Restricted countries">Países não atendidos</a></li>
+          <li><a href="politicas.html#contrato" data-en-href="policies.html#contract" data-en="Contract">Contrato</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-en="Contact">Contato</h4>
+        <ul>
+          <li><a href="mailto:suporte.fnxtech@gmail.com">suporte.fnxtech@gmail.com</a></li>
+          <li><a href="mailto:vendas.fnxholding@gmail.com">vendas.fnxholding@gmail.com</a></li>
+          <li><a href="https://wa.me/5541995553699" target="_blank" rel="noopener">WhatsApp +55 41 99555-3699</a></li>
+          <li><a href="https://instagram.com/yanszaida" target="_blank" rel="noopener">Instagram @yanszaida</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>© <span id="year">2026</span> FNX DEV. <span data-en="All rights reserved.">Todos os direitos reservados.</span></span>
+      <span>Created by Yan Victor · <a href="https://instagram.com/yanszaida" target="_blank" rel="noopener">@yanszaida</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CHECKOUT (modal) ================= -->
+<div class="modal" id="checkout" role="dialog" aria-modal="true" aria-labelledby="co-title">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="top">
+        <div><h3 id="co-title"></h3><p id="co-sub"></p></div>
+        <button class="x" type="button" data-close aria-label="X">×</button>
+      </div>
+      <div class="stepper"><div class="on" data-st="1" data-en="1. Your details">1. Seus dados</div><div data-st="2" data-en="2. Review &amp; accept">2. Revisar e aceitar</div><div data-st="3" data-en="3. Payment">3. Pagamento</div></div>
+    </div>
+    <form class="modal-body" id="co-form" novalidate>
+      <div class="pane on" data-pane="1">
+        <div class="f-grid">
+          <div class="field full"><label><span data-en="Full name">Nome completo</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
+          <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"><small data-en="Your receipt and contract go to this email.">O recibo e o contrato vão para este e-mail.</small></div>
+          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (00) 00000-0000" data-en-ph="+1 555 000 0000"></div>
+          <div class="field"><label><span data-en="Country">País</span> <em>*</em></label><select name="pais" required data-countries></select></div>
+          <div class="field"><label id="doc-label"></label><input name="documento" required autocomplete="off"><small id="doc-help"></small></div>
+          <div class="field"><label><span data-en="City / State">Cidade / Estado</span> <em>*</em></label><input name="cidade" required autocomplete="address-level2"></div>
+          <div class="field"><label data-en="Company (if any)">Empresa (se houver)</label><input name="empresa" autocomplete="organization"></div>
+          <div class="field full"><label><span data-en="Address">Endereço</span> <em>*</em></label><input name="endereco" required autocomplete="street-address" placeholder="Rua, número, bairro, CEP" data-en-ph="Street, number, ZIP / postcode"></div>
+          <div class="field full"><label data-en="Current website or Instagram">Site atual ou Instagram</label><input name="site" placeholder="Opcional" data-en-ph="Optional"></div>
+          <div class="field full"><label><span data-en="Briefly describe the project">Descreva rapidamente o projeto</span> <em>*</em></label><textarea name="descricao" required maxlength="1400" placeholder="Ramo do negócio, objetivo do site/sistema, referências..." data-en-ph="Your business, the goal of the website/system, references..."></textarea><small><span id="desc-count">0</span>/1400</small></div>
+        </div>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="msg" id="co-msg1"></div>
+        <div class="modal-actions"><button type="button" class="btn btn-primary" id="to-step2" data-en="Continue">Continuar</button></div>
+      </div>
+
+      <div class="pane" data-pane="2">
+        <div class="review" id="co-review"></div>
+        <label class="chk"><input type="checkbox" name="ac_termos" required> <span data-en="I have read and accept the <a href='policies.html#terms' target='_blank'>Terms of Service</a> and the <a href='policies.html#refund' target='_blank'>Purchase &amp; Refund Policy</a>, including the 7-day guarantee and that launch/handover happen after that period.">Li e aceito os <a href="politicas.html#termos" target="_blank">Termos de Uso e Serviço</a> e a <a href="politicas.html#reembolso" target="_blank">Política de Compra e Reembolso</a>, incluindo a garantia de 7 dias e que a publicação/entrega ocorre após esse prazo.</span></label>
+        <label class="chk"><input type="checkbox" name="ac_privacidade" required> <span data-en="I have read and accept the <a href='policies.html#privacy' target='_blank'>Privacy Policy</a> and authorize the use of my data to deliver this service.">Li e aceito a <a href="politicas.html#privacidade" target="_blank">Política de Privacidade</a> e autorizo o uso dos meus dados para executar este serviço.</span></label>
+        <label class="chk"><input type="checkbox" name="ac_contrato" required> <span data-en="I understand the service agreement will be emailed to me after payment and will govern the project.">Estou ciente de que o contrato de prestação de serviços será enviado ao meu e-mail após o pagamento e regerá o projeto.</span></label>
+        <label class="chk"><input type="checkbox" name="ac_pais" required> <span data-en="I declare that I am not located in, resident in or a citizen of any <a href='policies.html#countries' target='_blank'>restricted country or region</a>, and that the information above is true.">Declaro que não estou localizado, não resido e não sou cidadão de nenhum <a href="politicas.html#paises" target="_blank">país ou região não atendida</a>, e que as informações acima são verdadeiras.</span></label>
+        <div class="msg" id="co-msg2"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-back="1" data-en="Back">Voltar</button>
+          <button type="button" class="btn btn-primary" id="to-pay"><span class="spin"></span><span data-en="Go to payment">Ir para o pagamento</span></button>
+        </div>
+        <div class="secure"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg> <span data-en="You'll be taken to Stripe's secure checkout">Você será levado ao checkout seguro da Stripe</span></div>
+      </div>
+
+      <div class="pane" data-pane="3" style="text-align:center;padding:30px 0">
+        <div class="spin" style="display:inline-block;width:34px;height:34px;border-width:3px;border-top-color:var(--or)"></div>
+        <h3 style="margin:16px 0 6px" data-en="Opening secure payment…">Abrindo o pagamento seguro…</h3>
+        <p style="color:var(--muted);font-size:.92rem"><a class="inline-link" id="pay-link" href="#" data-en="Click here if it doesn't open">Clique aqui se não abrir</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ====================================================================
+   CONFIGURAÇÃO
+   Preços: os mesmos valores (em centavos) estão no worker.js.
+   O valor cobrado é SEMPRE o do worker; aqui é só exibição.
+   ==================================================================== */
+const WHATSAPP_NUM = '5541995553699';
+const PLANOS = [
+  { id:'landing', brl:300, usd:150,
+    pt:{nivel:'Simples', nome:'Landing Page', desc:'Uma página de alta conversão para divulgar um produto, serviço ou evento.',
+        itens:['1 página responsiva','Formulário + botão de WhatsApp','SEO básico','Publicação com domínio configurado','1 rodada de revisão','Suporte de 7 dias']},
+    en:{nivel:'Simple', nome:'Landing Page', desc:'A high-converting page to promote a product, service or event.',
+        itens:['1 responsive page','Form + WhatsApp button','Basic SEO','Deployment with domain setup','1 revision round','7 days of support']} },
+  { id:'starter', brl:600, usd:350,
+    pt:{nivel:'Simples', nome:'Starter', desc:'Site profissional para pequenos negócios e profissionais liberais.',
+        itens:['Até 4 páginas','Design responsivo','Formulário com e-mail automático','SEO básico','2 rodadas de revisão','Suporte de 15 dias']},
+    en:{nivel:'Simple', nome:'Starter', desc:'A professional website for small businesses and freelancers.',
+        itens:['Up to 4 pages','Responsive design','Form with automatic email','Basic SEO','2 revision rounds','15 days of support']} },
+  { id:'business', brl:1000, usd:600, pop:true,
+    pt:{nivel:'Avançado', nome:'Business', desc:'Site completo com painel para você editar e venda online integrada.',
+        itens:['Até 8 páginas','Painel administrativo','Pagamento online (checkout)','SEO técnico avançado','2 rodadas de revisão','Suporte de 30 dias']},
+    en:{nivel:'Advanced', nome:'Business', desc:'A complete website with an admin panel and built-in online sales.',
+        itens:['Up to 8 pages','Admin panel','Online payment (checkout)','Advanced technical SEO','2 revision rounds','30 days of support']} },
+  { id:'sistema', brl:1500, usd:1000,
+    pt:{nivel:'Avançado', nome:'Sistema Web', desc:'Sistema de gestão enxuto, como os dos nossos projetos, com até 3 módulos.',
+        itens:['Login e níveis de acesso','Até 3 módulos (ex.: financeiro, agenda, Kanban)','Banco de dados na nuvem','Relatórios simples','3 rodadas de revisão','Suporte de 30 dias']},
+    en:{nivel:'Advanced', nome:'Web System', desc:'A lean management system like the ones in our projects, with up to 3 modules.',
+        itens:['Login and access levels','Up to 3 modules (e.g. finance, calendar, Kanban)','Cloud database','Simple reports','3 revision rounds','30 days of support']} },
+];
+const BLOQUEADOS = ['CU','IR','KP','SY','RU','BY','VE','MM','AF','SD','SS','LY','YE','SO','CF','CD'];
+const FAIXAS = {
+  brl:{pt:['Até R$ 1.500','R$ 1.500 a R$ 3.000','R$ 3.000 a R$ 6.000','Acima de R$ 6.000','Ainda não sei'], en:['Up to R$ 1,500','R$ 1,500 – 3,000','R$ 3,000 – 6,000','Above R$ 6,000','Not sure yet']},
+  usd:{pt:['Até US$ 1.000','US$ 1.000 a 2.500','US$ 2.500 a 5.000','Acima de US$ 5.000','Ainda não sei'], en:['Up to US$ 1,000','US$ 1,000 – 2,500','US$ 2,500 – 5,000','Above US$ 5,000','Not sure yet']},
+};
+/* Textos gerados pelo script */
+const TXT = {
+  pt:{ unico:'único', parcelas:'ou até 12x no cartão', cartaoInt:'Cartão internacional', pop:'MAIS ESCOLHIDO', contratar:'Contratar', plano:'Plano',
+       pagUnico:'pagamento único', ate12:'até 12x no cartão', docBR:'CPF ou CNPJ', docEX:'Documento / Tax ID', docHelpBR:'Necessário para o contrato e a nota.',
+       docHelpEX:'Passaporte, ID nacional ou número fiscal da empresa.', obrig:'Preencha os campos obrigatórios destacados.', paisNao:'Infelizmente não atendemos o país selecionado.',
+       docInv:'CPF ou CNPJ inválido.', marque:'Para continuar, marque todas as confirmações.', escolhaTipo:'Escolha o tipo de projeto.',
+       enviado:'Pedido enviado! Respondemos em até 1 dia útil. Você também recebeu uma cópia por e-mail.', msgOk:'Mensagem enviada! Retornamos em breve.',
+       falha:'Não foi possível enviar agora. Tente novamente ou fale com a gente pelo WhatsApp.', vazio:'Marque as opções ao lado.', selecione:'Selecione',
+       r:{plano:'Plano',nome:'Nome',email:'E-mail',tel:'WhatsApp',docBR:'CPF/CNPJ',docEX:'Documento',empresa:'Empresa',end:'Endereço',total:'Total'},
+       s:{tipo:'Tipo',rec:'Funcionalidades',pag:'Páginas/telas',prazo:'Prazo',orc:'Investimento'},
+       waTitulo:'Pedido de orçamento — FNX DEV', waNome:'Nome', waEmpresa:'Empresa', waProjeto:'Projeto',
+       title:'FNX DEV — Sites e sistemas sob medida' },
+  en:{ unico:'one-time', parcelas:'', cartaoInt:'International card payment', pop:'MOST POPULAR', contratar:'Get', plano:'Plan',
+       pagUnico:'one-time payment', ate12:'', docBR:'CPF or CNPJ', docEX:'ID / Tax number', docHelpBR:'Required for the contract and invoice.',
+       docHelpEX:'Passport, national ID or company tax number.', obrig:'Please fill in the highlighted required fields.', paisNao:"Sorry, we don't serve the selected country.",
+       docInv:'Invalid CPF or CNPJ.', marque:'To continue, please tick all confirmations.', escolhaTipo:'Choose the project type.',
+       enviado:"Request sent! We'll reply within 1 business day. A copy was sent to your email.", msgOk:"Message sent! We'll get back to you soon.",
+       falha:"We couldn't send it right now. Please try again or reach us on WhatsApp.", vazio:'Pick the options on the left.', selecione:'Select',
+       r:{plano:'Plan',nome:'Name',email:'Email',tel:'WhatsApp',docBR:'CPF/CNPJ',docEX:'ID / Tax number',empresa:'Company',end:'Address',total:'Total'},
+       s:{tipo:'Type',rec:'Features',pag:'Pages/screens',prazo:'Timeline',orc:'Budget'},
+       waTitulo:'Quote request — FNX DEV', waNome:'Name', waEmpresa:'Company', waProjeto:'Project',
+       title:'FNX DEV — Custom websites and systems' },
+};
+
+/* ---------- helpers ---------- */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const store = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
+let lang = store.get('fnx_lang') || ((navigator.language||'pt').toLowerCase().startsWith('pt') ? 'pt' : 'en');
+let moeda = store.get('fnx_moeda') || (lang === 'en' ? 'usd' : 'brl');
+const T = () => TXT[lang];
+const fmt = (v, c) => c === 'brl'
+  ? 'R$ ' + v.toLocaleString(lang==='en'?'en-US':'pt-BR')
+  : 'US$ ' + v.toLocaleString(lang==='en'?'en-US':'pt-BR');
+const check = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- idioma ---------- */
+function aplicaIdioma(){
+  document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  document.title = T().title;
+  $$('[data-en]').forEach(el => {
+    if (el.dataset.pt === undefined) el.dataset.pt = el.tagName === 'OPTION' ? el.textContent : el.innerHTML;
+    const v = lang === 'en' ? el.dataset.en : el.dataset.pt;
+    if (el.tagName === 'OPTION') el.textContent = v; else el.innerHTML = v;
+  });
+  $$('[data-en-ph]').forEach(el => {
+    if (el.dataset.ptPh === undefined) el.dataset.ptPh = el.placeholder;
+    el.placeholder = lang === 'en' ? el.dataset.enPh : el.dataset.ptPh;
+  });
+  $$('[data-en-href]').forEach(el => {
+    if (el.dataset.ptHref === undefined) el.dataset.ptHref = el.getAttribute('href');
+    el.setAttribute('href', lang === 'en' ? el.dataset.enHref : el.dataset.ptHref);
+  });
+  $$('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  preenchePaises();
+  renderPlanos(); renderFaixas(); atualizaResumo();
+  if (planoAtual) atualizaSubtitulo();
+}
+$$('[data-lang]').forEach(b => b.addEventListener('click', () => {
+  lang = b.dataset.lang; store.set('fnx_lang', lang); aplicaIdioma();
+}));
+
+/* ---------- planos ---------- */
+function renderPlanos(){
+  const t = T();
+  $('#plans').innerHTML = PLANOS.map(p => { const x = p[lang]; return `
+    <div class="card plan ${p.pop?'pop':''}">
+      ${p.pop?`<div class="ribbon">${t.pop}</div>`:''}
+      <div class="lvl">${x.nivel}</div>
+      <h3>${x.nome}</h3>
+      <p class="desc">${x.desc}</p>
+      <div class="price">${fmt(p[moeda], moeda)} <small>${t.unico}</small></div>
+      <div class="inst">${moeda==='brl' ? (lang==='en' ? 'or up to 12 card installments (Brazil)' : t.parcelas) : t.cartaoInt}</div>
+      <ul>${x.itens.map(i=>`<li>${check}<span>${i}</span></li>`).join('')}</ul>
+      <button class="btn ${p.pop?'btn-primary':'btn-ghost'} btn-block" data-buy="${p.id}">${t.contratar} ${x.nome}</button>
+    </div>`; }).join('');
+  $$('[data-buy]').forEach(b => b.addEventListener('click', () => abrirCheckout(b.dataset.buy)));
+}
+function renderFaixas(){
+  const idx = $$('input[name="orcamento"]').findIndex(i => i.checked);
+  $('#budget-opts').innerHTML = FAIXAS[moeda][lang].map((f,i) =>
+    `<label class="opt"><input type="radio" name="orcamento" value="${esc(f)}" ${i===idx?'checked':''}><span>${esc(f)}</span></label>`).join('');
+}
+function setMoeda(c){
+  moeda = c; store.set('fnx_moeda', c);
+  $$('[data-cur]').forEach(b => b.classList.toggle('on', b.dataset.cur === c));
+  renderPlanos(); renderFaixas(); atualizaResumo();
+}
+$$('[data-cur]').forEach(b => b.addEventListener('click', () => setMoeda(b.dataset.cur)));
+
+/* ---------- países (lista ISO sem os bloqueados) ---------- */
+const ISO = 'AD AE AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BZ CA CC CG CH CI CK CL CM CN CO CR CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IS IT JE JM JO JP KE KG KH KI KM KN KR KW KY KZ LA LB LC LI LK LR LS LT LU LV MA MC MD ME MF MG MH MK ML MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RW SA SB SC SE SG SH SI SJ SK SL SM SN SR ST SV SX SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VG VI VN VU WF WS XK YT ZA ZM ZW'.split(' ');
+function nomeRegiao(c, l){ try { return new Intl.DisplayNames([l==='en'?'en':'pt-BR'], {type:'region'}).of(c) || c; } catch(e){ return c; } }
+const nomePais = c => nomeRegiao(c, lang);
+function preenchePaises(){
+  const lista = ISO.filter(c => !BLOQUEADOS.includes(c)).map(c => ({c, n:nomePais(c)}))
+    .sort((a,b) => a.c==='BR' ? -1 : b.c==='BR' ? 1 : a.n.localeCompare(b.n, lang==='en'?'en':'pt-BR'));
+  $$('[data-countries]').forEach(sel => {
+    const atual = sel.value || (lang === 'en' ? '' : 'BR');
+    sel.innerHTML = `<option value="">${T().selecione}</option>` + lista.map(p => `<option value="${p.c}">${esc(p.n)}</option>`).join('');
+    sel.value = atual;
+  });
+  $('#blocked-list').textContent = ' ' + BLOQUEADOS.map(nomePais).join(', ');
+}
+
+/* ---------- validação ---------- */
+function valida(container){
+  let ok = true;
+  $$('[required]', container).forEach(el => {
+    if (el.closest('.pane') && !el.closest('.pane').classList.contains('on')) return;
+    const f = el.closest('.field');
+    let bad = el.type === 'checkbox' ? !el.checked : !String(el.value).trim();
+    if (!bad && el.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
+    if (f) f.classList.toggle('bad', bad);
+    if (bad) ok = false;
+  });
+  return ok;
+}
+function showMsg(el, txt, type='err'){ el.className = 'msg ' + type; el.textContent = txt; }
+function clearMsg(el){ el.className = 'msg'; el.textContent = ''; }
+const soDigitos = s => String(s||'').replace(/\D/g,'');
+function cpfValido(c){ c=soDigitos(c); if(c.length!==11||/^(\d)\1+$/.test(c))return false;
+  let s=0; for(let i=0;i<9;i++)s+=+c[i]*(10-i); let d=(s*10)%11%10; if(d!==+c[9])return false;
+  s=0; for(let i=0;i<10;i++)s+=+c[i]*(11-i); d=(s*10)%11%10; return d===+c[10]; }
+function cnpjValido(c){ c=soDigitos(c); if(c.length!==14||/^(\d)\1+$/.test(c))return false;
+  const calc=n=>{let s=0,p=n-7;for(let i=0;i<n;i++){s+=+c[i]*p--;if(p<2)p=9}const r=s%11;return r<2?0:11-r};
+  return calc(12)===+c[12]&&calc(13)===+c[13]; }
+
+async function api(path, data){
+  data.idioma = lang;
+  const r = await fetch(path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+  let j = {}; try { j = await r.json(); } catch(e){}
+  if (!r.ok || j.ok === false) throw new Error(j.erro || T().falha);
+  return j;
+}
+function loading(btn, on){ btn.disabled = on; btn.classList.toggle('loading', on); }
+
+/* ---------- CHECKOUT ---------- */
+const modal = $('#checkout'), coForm = $('#co-form');
+let planoAtual = null;
+const moedaDoPais = c => c === 'BR' ? 'brl' : 'usd';
+function abrirCheckout(id){
+  planoAtual = PLANOS.find(p => p.id === id);
+  atualizaSubtitulo(); irPasso(1);
+  modal.classList.add('open'); document.body.style.overflow = 'hidden';
+  setTimeout(()=> coForm.nome.focus(), 50);
+}
+function fecharCheckout(){ modal.classList.remove('open'); document.body.style.overflow = ''; }
+function atualizaSubtitulo(){
+  const t = T(), c = moedaDoPais(coForm.pais.value), br = coForm.pais.value === 'BR';
+  $('#co-title').textContent = lang === 'en' ? `${planoAtual.en.nome} plan` : `Plano ${planoAtual.pt.nome}`;
+  $('#co-sub').textContent = `${fmt(planoAtual[c], c)} · ${t.pagUnico}${c==='brl' && t.ate12 ? ' · ' + t.ate12 : ''}`;
+  $('#doc-label').innerHTML = (br ? t.docBR : t.docEX) + ' <em>*</em>';
+  $('#doc-help').textContent = br ? t.docHelpBR : t.docHelpEX;
+  coForm.documento.inputMode = br ? 'numeric' : 'text';
+}
+coForm.pais.addEventListener('change', atualizaSubtitulo);
+coForm.descricao.addEventListener('input', e => $('#desc-count').textContent = e.target.value.length);
+function irPasso(n){
+  $$('.pane', coForm).forEach(p => p.classList.toggle('on', p.dataset.pane == n));
+  $$('.stepper div').forEach(s => s.classList.toggle('on', +s.dataset.st <= n));
+  $('.modal-box').scrollTop = 0;
+}
+$$('[data-close]').forEach(b => b.addEventListener('click', fecharCheckout));
+modal.addEventListener('click', e => { if (e.target === modal) fecharCheckout(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) fecharCheckout(); });
+$$('[data-back]').forEach(b => b.addEventListener('click', () => irPasso(b.dataset.back)));
+
+$('#to-step2').addEventListener('click', () => {
+  const m = $('#co-msg1'), t = T(), f = coForm; clearMsg(m);
+  if (!valida(f)) return showMsg(m, t.obrig);
+  if (BLOQUEADOS.includes(f.pais.value)) return showMsg(m, t.paisNao);
+  const br = f.pais.value === 'BR';
+  if (br && !(cpfValido(f.documento.value) || cnpjValido(f.documento.value))) {
+    f.documento.closest('.field').classList.add('bad'); return showMsg(m, t.docInv);
+  }
+  const c = moedaDoPais(f.pais.value), r = t.r;
+  const linhas = [[r.plano, planoAtual[lang].nome], [r.nome, f.nome.value], [r.email, f.email.value], [r.tel, f.telefone.value],
+    [br?r.docBR:r.docEX, f.documento.value], [r.empresa, f.empresa.value || '—'],
+    [r.end, `${f.endereco.value} — ${f.cidade.value}, ${nomePais(f.pais.value)}`]];
+  $('#co-review').innerHTML = linhas.map(([k,v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('') +
+    `<div class="total"><span>${r.total}</span><b>${fmt(planoAtual[c], c)}</b></div>`;
+  irPasso(2);
+});
+
+$('#to-pay').addEventListener('click', async () => {
+  const m = $('#co-msg2'), btn = $('#to-pay'), f = coForm; clearMsg(m);
+  if (!valida(f)) return showMsg(m, T().marque);
+  const dados = {
+    plano: planoAtual.id, nome: f.nome.value, email: f.email.value, telefone: f.telefone.value,
+    pais: f.pais.value, documento: f.documento.value, cidade: f.cidade.value, endereco: f.endereco.value,
+    empresa: f.empresa.value, site: f.site.value, descricao: f.descricao.value, website: f.website.value,
+    aceites: { termos: f.ac_termos.checked, privacidade: f.ac_privacidade.checked, contrato: f.ac_contrato.checked, pais: f.ac_pais.checked },
+  };
+  loading(btn, true);
+  try {
+    const j = await api('/api/checkout', dados);
+    $('#pay-link').href = j.url; irPasso(3); window.location.href = j.url;
+  } catch (e) { showMsg(m, e.message); }
+  finally { loading(btn, false); }
+});
+
+/* ---------- PERSONALIZADO ---------- */
+const cf = $('#custom-form');
+/* Os valores enviados ficam em português (para o seu e-mail); o resumo na tela mostra o texto do idioma atual. */
+const rotulo = input => input ? input.nextElementSibling.textContent.trim() : '';
+function dadosCustom(){
+  const fd = new FormData(cf);
+  return {
+    tipo: fd.get('tipo') || '', recursos: fd.getAll('recursos'), paginas: fd.get('paginas') || '',
+    prazo: fd.get('prazo') || '', orcamento: fd.get('orcamento') || '', moeda,
+    nome: fd.get('nome') || '', email: fd.get('email') || '', telefone: fd.get('telefone') || '',
+    pais: fd.get('pais') || '', empresa: fd.get('empresa') || '', referencia: fd.get('referencia') || '',
+    descricao: fd.get('descricao') || '', website: fd.get('website') || '', aceite: !!fd.get('aceite'),
+  };
+}
+function itensResumo(){
+  const s = T().s, li = [];
+  const sel = n => $(`input[name="${n}"]:checked`, cf);
+  if (sel('tipo')) li.push([s.tipo, rotulo(sel('tipo'))]);
+  const rec = $$('input[name="recursos"]:checked', cf).map(rotulo);
+  if (rec.length) li.push([s.rec, rec.join(', ')]);
+  if (sel('paginas')) li.push([s.pag, rotulo(sel('paginas'))]);
+  if (sel('prazo')) li.push([s.prazo, rotulo(sel('prazo'))]);
+  if (sel('orcamento')) li.push([s.orc, rotulo(sel('orcamento'))]);
+  return li;
+}
+function atualizaResumo(){
+  const li = itensResumo();
+  $('#custom-summary').innerHTML = li.length ? li.map(([k,v]) => `<li><b>${esc(k)}</b>${esc(v)}</li>`).join('') : `<li class="empty">${T().vazio}</li>`;
+}
+cf.addEventListener('change', atualizaResumo);
+function textoWhats(d){
+  const t = T();
+  return [t.waTitulo, `${t.waNome}: ${d.nome}`, d.empresa && `${t.waEmpresa}: ${d.empresa}`,
+    ...itensResumo().map(([k,v]) => `${k}: ${v}`), `${t.waProjeto}: ${d.descricao}`].filter(Boolean).join('\n');
+}
+cf.addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('#custom-msg'), btn = $('#custom-btn'), t = T(); clearMsg(m);
+  const d = dadosCustom();
+  if (!d.tipo) return showMsg(m, t.escolhaTipo);
+  if (!valida(cf)) return showMsg(m, t.obrig);
+  loading(btn, true);
+  try {
+    await api('/api/personalizado', d);
+    showMsg(m, t.enviado, 'ok');
+    $('#wa-continue').href = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(textoWhats(d))}`;
+    $('#custom-after').style.display = 'block';
+    btn.style.display = 'none';
+  } catch (err) { showMsg(m, err.message); }
+  finally { loading(btn, false); }
+});
+
+/* ---------- CONTATO ---------- */
+const ctf = $('#contact-form');
+ctf.addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('#contact-msg'), btn = $('#contact-btn'); clearMsg(m);
+  if (!valida(ctf)) return showMsg(m, T().obrig);
+  const fd = Object.fromEntries(new FormData(ctf)); fd.aceite = !!fd.aceite;
+  loading(btn, true);
+  try { await api('/api/contato', fd); showMsg(m, T().msgOk, 'ok'); ctf.reset(); }
+  catch (err) { showMsg(m, err.message); }
+  finally { loading(btn, false); }
+});
+
+/* ---------- galeria ---------- */
+$$('[data-gallery]').forEach(g => {
+  $$('.thumbs button', g).forEach(b => b.addEventListener('click', () => {
+    $('[data-main]', g).src = b.dataset.src;
+    $$('.thumbs button', g).forEach(x => x.classList.toggle('on', x === b));
+  }));
+});
+
+/* ---------- menu mobile ---------- */
+const burger = $('#burger'), mob = $('#mobile');
+burger.addEventListener('click', () => { const o = mob.classList.toggle('open'); burger.setAttribute('aria-expanded', o); });
+$$('a', mob).forEach(a => a.addEventListener('click', () => mob.classList.remove('open')));
+
+/* ---------- reveal ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.12});
+$$('.reveal').forEach(el => io.observe(el));
+document.addEventListener('input', e => { const f = e.target.closest('.field'); if (f) f.classList.remove('bad'); });
+
+$('#year').textContent = new Date().getFullYear();
+$$('[data-cur]').forEach(b => b.classList.toggle('on', b.dataset.cur === moeda));
+aplicaIdioma();
+</script>
+</body>
+</html>

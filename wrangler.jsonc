@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fnx-dev",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    // Endereço final do site (sem barra no fim)
+    "SITE_URL": "https://dev.fnxholding.com",
+    // Para onde vão as vendas, pré-cadastros e orçamentos
+    "SALES_EMAIL": "vendas.fnxholding@gmail.com",
+    // Para onde vão mensagens de suporte/reembolso
+    "SUPPORT_EMAIL": "suporte.fnxtech@gmail.com",
+    // Remetente dos e-mails (domínio precisa estar verificado no Resend)
+    "RESEND_FROM": "FNX DEV <vendas@fnxholding.com>",
+    // Formas de pagamento no Brasil. Quando o Pix for liberado na Stripe, mude para "card,boleto,pix"
+    "PAYMENT_METHODS_BRL": "card,boleto"
+  }
+  // Segredos (NÃO coloque aqui): STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY
+}
