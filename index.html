@@ -114,6 +114,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,12,.
 .chips span{font-size:.78rem;color:#d4d4d8;background:var(--card2);border:1px solid var(--line);padding:5px 10px;border-radius:8px}
 .link-out{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--or)}
 .link-out:hover{text-decoration:underline}
+.link-privado{display:inline-flex;align-items:flex-start;gap:2px;font-size:.88rem;color:var(--muted);line-height:1.45}
 .mock{position:absolute;inset:0;background:#E3E3DF;color:#141414;padding:7% 8%;display:flex;flex-direction:column;justify-content:center}
 .mock h4{font-size:clamp(1rem,2.4vw,1.7rem);font-weight:800;letter-spacing:-.02em;max-width:70%;line-height:1.15}
 .mock p{font-size:clamp(.6rem,1vw,.8rem);color:#555;margin:8px 0 14px;max-width:60%}
@@ -346,7 +347,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
     </div>
     <div class="hero-visual">
       <div class="browser">
-        <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
+        <div class="browser-bar"><i></i><i></i><i></i><span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b data-en="Private system · restricted access" style="font-weight:600">Sistema privado · acesso restrito</b></span></div>
         <img src="assets/projetos/fnx-tech-2.webp" alt="FNX TECH" width="1917" height="968" fetchpriority="high">
       </div>
       <div class="float">
@@ -413,7 +414,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <article class="card proj reveal" data-gallery>
         <div class="proj-media">
           <div class="browser">
-            <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
+            <div class="browser-bar"><i></i><i></i><i></i><span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b data-en="Private system · restricted access" style="font-weight:600">Sistema privado · acesso restrito</b></span></div>
             <div class="shot"><img src="assets/projetos/fnx-tech-1.webp" alt="FNX TECH" loading="lazy" data-main></div>
           </div>
           <div class="thumbs">
@@ -426,14 +427,14 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
           <h3>FNX TECH</h3>
           <p data-en="Complete internal system for a tech company: team and access control, finance, metrics and reports, projects, CRM/pipeline, Trello-style boards, billing, file drive, meetings and time bank.">Sistema interno completo para empresa de tecnologia: equipe e acessos, financeiro, métricas e relatórios, projetos, CRM/pipeline, boards estilo Trello, cobranças, drive de arquivos, reuniões e banco de horas.</p>
           <div class="chips"><span data-en="Login &amp; access levels">Login e níveis de acesso</span><span data-en="Kanban boards">Boards (Kanban)</span><span data-en="Finance">Financeiro</span><span data-en="Calendar">Agenda</span><span data-en="Responsive">Responsivo</span></div>
-          <a class="link-out" href="https://sistema.fnxholding.com" target="_blank" rel="noopener"><span data-en="Open system">Acessar sistema</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+          <span class="link-privado"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span data-en="Private system — access only for the client's team. Video demo on request.">Sistema privado — acesso só para a equipe do cliente. Demonstração em vídeo sob pedido.</span></span>
         </div>
       </article>
 
       <article class="card proj reveal" data-gallery>
         <div class="proj-media">
           <div class="browser">
-            <div class="browser-bar"><i></i><i></i><i></i><span>sistema.engjob.com.br</span></div>
+            <div class="browser-bar"><i></i><i></i><i></i><span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b data-en="Private system · restricted access" style="font-weight:600">Sistema privado · acesso restrito</b></span></div>
             <div class="shot"><img src="assets/projetos/engjob-1.webp" alt="Eng Job" loading="lazy" data-main></div>
           </div>
           <div class="thumbs">
@@ -447,7 +448,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
           <h3 data-en="Eng Job — Engineering &amp; Maintenance">Eng Job — Engenharia e Manutenção</h3>
           <p data-en="Management system for an engineering company: registrations, employees, bank statements, commissions, job sites, materials and storage, payment slips, invoices, proposals, technical visits, time tracking and calendar.">Sistema de gestão para empresa de engenharia: cadastro, funcionários, extratos bancários, comissões, obras, materiais e armazenamento, boletos, notas fiscais, propostas, visitas técnicas, controle de ponto e calendário.</p>
           <div class="chips"><span data-en="Job sites &amp; proposals">Obras e propostas</span><span data-en="Invoices">Notas e boletos</span><span data-en="Time tracking">Controle de ponto</span><span data-en="Reports">Relatórios</span><span>Cloudflare</span></div>
-          <a class="link-out" href="https://sistema.engjob.com.br" target="_blank" rel="noopener"><span data-en="Open system">Acessar sistema</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+          <span class="link-privado"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span data-en="Private system — access only for the client's team. Video demo on request.">Sistema privado — acesso só para a equipe do cliente. Demonstração em vídeo sob pedido.</span></span>
         </div>
       </article>
     </div>
