@@ -181,6 +181,14 @@ td.y{color:var(--or);font-weight:800}td.n{color:#52525b}
 .field select option{background:#151517}
 .field small{display:block;color:var(--dim);font-size:.76rem;margin-top:5px}
 .field.bad input,.field.bad select,.field.bad textarea{border-color:var(--err)}
+.tel-wrap{display:flex;gap:8px}
+.tel-wrap .tel-num{flex:1;min-width:0}
+.ddi{position:relative;flex:none;width:96px}
+.ddi-view{display:flex;align-items:center;justify-content:center;gap:6px;height:100%;min-height:46px;background:#0f0f11;border:1px solid var(--line2);border-radius:11px;font-size:.9rem;font-weight:700;padding:0 10px;white-space:nowrap;transition:border-color .15s,box-shadow .15s}
+.ddi-view::after{content:"";width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--muted)}
+.ddi-sel{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+.ddi:focus-within .ddi-view{border-color:var(--or);box-shadow:0 0 0 3px rgba(255,106,0,.18)}
+.field.bad .ddi-view{border-color:var(--err)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .chk{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#d4d4d8;margin-bottom:12px;cursor:pointer}
 .chk input{margin-top:4px;accent-color:var(--or);width:17px;height:17px;flex:none}
@@ -601,7 +609,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
         <div class="f-grid">
           <div class="field"><label><span data-en="Your name">Seu nome</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
           <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"></div>
-          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (41) 9 9999-9999" data-en-ph="+1 5550000000"></div>
+          <div class="field"><label>WhatsApp <em>*</em></label><div class="tel-wrap" data-tel><div class="ddi"><span class="ddi-view">BR +55</span><select class="ddi-sel" aria-label="País do telefone / Phone country"></select></div><input type="tel" class="tel-num" required autocomplete="tel-national" inputmode="tel"><input type="hidden" name="telefone"></div></div>
           <div class="field"><label><span data-en="Country">País</span> <em>*</em></label><select name="pais" required data-countries></select></div>
           <div class="field"><label data-en="Company">Empresa</label><input name="empresa" autocomplete="organization"></div>
           <div class="field"><label data-en="Current website or reference">Site atual ou referência</label><input name="referencia" placeholder="https://"></div>
@@ -714,7 +722,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <div class="f-grid">
         <div class="field"><label><span data-en="Name">Nome</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
         <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"></div>
-        <div class="field full"><label>WhatsApp</label><input name="telefone" type="tel" autocomplete="tel" placeholder="+55 (41) 9 9999-9999" data-en-ph="+1 5550000000"></div>
+        <div class="field full"><label>WhatsApp</label><div class="tel-wrap" data-tel><div class="ddi"><span class="ddi-view">BR +55</span><select class="ddi-sel" aria-label="País do telefone / Phone country"></select></div><input type="tel" class="tel-num" autocomplete="tel-national" inputmode="tel"><input type="hidden" name="telefone"></div></div>
         <div class="field full"><label data-en="Subject">Assunto</label>
           <select name="assunto">
             <option value="Quero contratar um plano" data-en="I want to buy a plan">Quero contratar um plano</option>
@@ -789,7 +797,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
         <div class="f-grid">
           <div class="field full"><label><span data-en="Full name">Nome completo</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
           <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"><small data-en="Your receipt and contract go to this email.">O recibo e o contrato vão para este e-mail.</small></div>
-          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (41) 9 9999-9999" data-en-ph="+1 5550000000"></div>
+          <div class="field"><label>WhatsApp <em>*</em></label><div class="tel-wrap" data-tel><div class="ddi"><span class="ddi-view">BR +55</span><select class="ddi-sel" aria-label="País do telefone / Phone country"></select></div><input type="tel" class="tel-num" required autocomplete="tel-national" inputmode="tel"><input type="hidden" name="telefone"></div></div>
           <div class="field"><label><span data-en="Country">País</span> <em>*</em></label><select name="pais" required data-countries></select></div>
           <div class="field"><label id="doc-label"></label><input name="documento" required autocomplete="off"><small id="doc-help"></small></div>
           <div class="field"><label><span data-en="City / State">Cidade / Estado</span> <em>*</em></label><input name="cidade" required autocomplete="address-level2"></div>
@@ -866,7 +874,7 @@ const TXT = {
   pt:{ unico:'único', parcelas:'ou até 12x no cartão', cartaoInt:'Cartão internacional', pop:'MAIS ESCOLHIDO', contratar:'Contratar', plano:'Plano',
        pagUnico:'pagamento único', ate12:'até 12x no cartão', docBR:'CPF ou CNPJ', docEX:'Documento / Tax ID', docHelpBR:'Necessário para o contrato e a nota.',
        docHelpEX:'Passaporte, ID nacional ou número fiscal da empresa.', obrig:'Preencha os campos obrigatórios destacados.', paisNao:'Infelizmente não atendemos o país selecionado.',
-       docInv:'CPF ou CNPJ inválido.', telInv:'WhatsApp inválido. Use o formato +55 (41) 9 9999-9999.', marque:'Para continuar, marque todas as confirmações.', escolhaTipo:'Escolha o tipo de projeto.',
+       docInv:'CPF ou CNPJ inválido.', telInv:'WhatsApp inválido. Confira o país e o número com DDD.', telNum:'Número com DDD', telNumEx:'Número', marque:'Para continuar, marque todas as confirmações.', escolhaTipo:'Escolha o tipo de projeto.',
        enviado:'Pedido enviado! Respondemos em até 1 dia útil. Você também recebeu uma cópia por e-mail.', msgOk:'Mensagem enviada! Retornamos em breve.',
        falha:'Não foi possível enviar agora. Tente novamente ou fale com a gente pelo WhatsApp.', vazio:'Marque as opções ao lado.', selecione:'Selecione',
        r:{plano:'Plano',nome:'Nome',email:'E-mail',tel:'WhatsApp',docBR:'CPF/CNPJ',docEX:'Documento',empresa:'Empresa',end:'Endereço',total:'Total'},
@@ -876,7 +884,7 @@ const TXT = {
   en:{ unico:'one-time', parcelas:'', cartaoInt:'International card payment', pop:'MOST POPULAR', contratar:'Get', plano:'Plan',
        pagUnico:'one-time payment', ate12:'', docBR:'CPF or CNPJ', docEX:'ID / Tax number', docHelpBR:'Required for the contract and invoice.',
        docHelpEX:'Passport, national ID or company tax number.', obrig:'Please fill in the highlighted required fields.', paisNao:"Sorry, we don't serve the selected country.",
-       docInv:'Invalid CPF or CNPJ.', telInv:'Invalid WhatsApp number. Include the country code, e.g. +1 5550000000.', marque:'To continue, please tick all confirmations.', escolhaTipo:'Choose the project type.',
+       docInv:'Invalid CPF or CNPJ.', telInv:'Invalid WhatsApp number. Check the country and the number.', telNum:'Number with area code', telNumEx:'Phone number', marque:'To continue, please tick all confirmations.', escolhaTipo:'Choose the project type.',
        enviado:"Request sent! We'll reply within 1 business day. A copy was sent to your email.", msgOk:"Message sent! We'll get back to you soon.",
        falha:"We couldn't send it right now. Please try again or reach us on WhatsApp.", vazio:'Pick the options on the left.', selecione:'Select',
        r:{plano:'Plan',nome:'Name',email:'Email',tel:'WhatsApp',docBR:'CPF/CNPJ',docEX:'ID / Tax number',empresa:'Company',end:'Address',total:'Total'},
@@ -965,6 +973,7 @@ function preenchePaises(){
     sel.value = atual;
   });
   $('#blocked-list').textContent = ' ' + BLOQUEADOS.map(nomePais).join(', ');
+  preencheDDI();
 }
 
 /* ---------- validação ---------- */
@@ -992,28 +1001,19 @@ function cnpjValido(c){ c=soDigitos(c); if(c.length!==14||/^(\d)\1+$/.test(c))re
   return calc(12)===+c[12]&&calc(13)===+c[13]; }
 
 
-/* ---------- máscara do WhatsApp (adapta ao país) ----------
-   Brasil: +55 (41) 9 9555-3699  (fixo: +55 (41) 3333-4444)
-   Outros países: formato oficial de cada país, pela biblioteca libphonenumber
-   (arquivo assets/js/libphonenumber-min.js). Ex.: +1 213 373 4253 · +351 912 345 678 · +44 7400 123456 */
-const LPN = window.libphonenumber || null;   // se o arquivo não carregar, o campo continua funcionando sem formatação
-function paisDoTel(input){
-  const sel = input.form && input.form.querySelector('[data-countries]');
-  return sel ? sel.value : (lang === 'en' ? '' : 'BR');
-}
-function ddi(pais){ try { return pais && LPN ? String(LPN.getCountryCallingCode(pais)) : ''; } catch(e){ return ''; } }
+/* ---------- WhatsApp: seletor de país + número no padrão do país ----------
+   [ BR +55 ▾ ] [ (41) 9 9555-3699 ]
+   - O código acompanha o campo "País" do formulário, até a pessoa trocar o código à mão.
+   - Brasil: (41) 9 9555-3699 / fixo (41) 3333-4444. Outros países: padrão oficial (biblioteca libphonenumber).
+   - O valor enviado (campo escondido "telefone") sai completo: +55 (41) 9 9555-3699, +1 213-373-4253, +351 912 345 678... */
+const LPN = window.libphonenumber || null;
+function ddi(pais){ try { return pais && LPN ? String(LPN.getCountryCallingCode(pais)) : (pais === 'BR' ? '55' : ''); } catch(e){ return ''; } }
+const telEl = form => form.querySelector('.tel-num');
 
-function formataBR(bruto, d){
-  const semEspaco = bruto.replace(/\s/g, '');
-  if (semEspaco === '+55') return '+55 (';
-  if (bruto.startsWith('+') && !bruto.startsWith('+55')) {     // número de outro país digitado com +
-    if ('+55'.startsWith(semEspaco)) return semEspaco;
-    return formataIntl('+' + d, '');
-  }
-  if (bruto.startsWith('+55') || (d.startsWith('55') && d.length >= 12)) d = d.slice(2);
+function formataBR(d){
   d = d.slice(0, 11);
   if (!d) return '';
-  let out = '+55 (' + d.slice(0, 2);
+  let out = '(' + d.slice(0, 2);
   if (d.length <= 2) return out;
   out += ') ';
   let n = d.slice(2);
@@ -1029,53 +1029,104 @@ function formataBR(bruto, d){
   }
   return out;
 }
-function formataIntl(bruto, pais){
-  let d = bruto.replace(/\D/g, '');
-  if (!d) return bruto.trim() === '+' ? '+' : '';
+function formataNacional(d, pais){
+  if (pais === 'BR') return formataBR(d);
   const cod = ddi(pais);
-  // digitou sem "+": coloca o código do país escolhido na frente (e tira o 0 de discagem local)
-  if (!bruto.trim().startsWith('+') && cod && !d.startsWith(cod)) {
-    if (d[0] === '0' && pais !== 'IT') d = d.slice(1);
-    d = cod + d;
-  }
-  d = d.slice(0, 15);
-  if (!LPN) return '+' + d;
-  try { return new LPN.AsYouType().input('+' + d); } catch(e){ return '+' + d; }
+  d = d.slice(0, 15 - cod.length);
+  if (!LPN || !d) return d;
+  try {
+    const f = new LPN.AsYouType().input('+' + cod + d);          // ex.: +44 7400 123456
+    return f.startsWith('+' + cod) ? f.slice(cod.length + 1).trim() : d;
+  } catch(e){ return d; }
 }
-function formataTel(valor, pais){
-  const bruto = String(valor || '').trim();
-  return pais === 'BR' ? formataBR(bruto, bruto.replace(/\D/g, '')) : formataIntl(bruto, pais);
+function numeroCompleto(d, pais){
+  if (!d) return '';
+  if (pais === 'BR') return '+55 ' + formataBR(d);
+  if (LPN) { try { return LPN.parsePhoneNumber(d, pais).formatInternational(); } catch(e){} }
+  return '+' + ddi(pais) + ' ' + d;
 }
 function telValido(el){
-  const d = el.value.replace(/\D/g, '');
+  const wrap = el.closest('[data-tel]'), d = el.value.replace(/\D/g, '');
   if (!d) return !el.required;
-  if (el.value.startsWith('+55 (')) return d.length === 12 || d.length === 13;   // 55 + DDD + 8 ou 9 dígitos
-  if (LPN) { try { return LPN.isPossiblePhoneNumber('+' + d); } catch(e){} }
-  return d.length >= 8 && d.length <= 15;
+  const pais = wrap.querySelector('.ddi-sel').value;
+  if (pais === 'BR') return d.length === 10 || d.length === 11;      // DDD + 8 ou 9 dígitos
+  if (LPN) { try { return LPN.isPossiblePhoneNumber(d, pais); } catch(e){} }
+  return d.length >= 6 && d.length <= 14;
 }
-function placeholderTel(tel, pais){
-  if (pais === 'BR') tel.placeholder = '+55 (41) 9 9999-9999';
-  else if (ddi(pais)) tel.placeholder = '+' + ddi(pais) + ' …';
+function atualizaTel(wrap){
+  const sel = wrap.querySelector('.ddi-sel'), num = wrap.querySelector('.tel-num'), pais = sel.value;
+  wrap.querySelector('.ddi-view').textContent = `${pais} +${ddi(pais)}`;
+  num.placeholder = pais === 'BR' ? '(41) 9 9999-9999' : T().telNumEx;
+  const d = num.value.replace(/\D/g, '');
+  num.value = formataNacional(d, pais);
+  num.dataset.dig = num.value.replace(/\D/g, '');
+  wrap.querySelector('input[type=hidden]').value = numeroCompleto(num.dataset.dig, pais);
 }
+function paisPadraoTel(wrap){
+  const selPais = wrap.closest('form').querySelector('[data-countries]');
+  return (selPais && selPais.value) || (lang === 'en' ? 'US' : 'BR');
+}
+function preencheDDI(){
+  const lista = ISO.filter(c => !BLOQUEADOS.includes(c) && ddi(c))
+    .map(c => ({c, n:nomePais(c), cod:ddi(c)}))
+    .sort((a,b) => a.c==='BR' ? -1 : b.c==='BR' ? 1 : a.n.localeCompare(b.n, lang==='en'?'en':'pt-BR'));
+  $$('[data-tel]').forEach(wrap => {
+    const sel = wrap.querySelector('.ddi-sel');
+    const atual = sel.value || paisPadraoTel(wrap);
+    sel.innerHTML = lista.map(p => `<option value="${p.c}">${esc(p.n)} (+${p.cod})</option>`).join('');
+    sel.value = atual;
+    atualizaTel(wrap);
+  });
+}
+// troca manual do código do telefone
+document.addEventListener('change', e => {
+  if (e.target.matches('.ddi-sel')) { e.target.dataset.manual = '1'; atualizaTel(e.target.closest('[data-tel]')); return; }
+  // trocou o "País" do formulário → o código do telefone acompanha (se a pessoa não escolheu outro à mão)
+  if (e.target.matches('[data-countries]') && e.target.form && e.target.value) {
+    const wrap = e.target.form.querySelector('[data-tel]');
+    if (!wrap) return;
+    const sel = wrap.querySelector('.ddi-sel');
+    const num = wrap.querySelector('.tel-num');
+    // só acompanha se a pessoa não escolheu o código à mão e o número ainda não está completo
+    if (!sel.dataset.manual && !(num.value && telValido(num))) { sel.value = e.target.value; atualizaTel(wrap); }
+  }
+});
+// digitando o número
 document.addEventListener('input', e => {
   const el = e.target;
-  if (el.type !== 'tel') return;
-  const pais = paisDoTel(el), antes = el.dataset.dig || '';
-  let novo = formataTel(el.value, pais);
-  // apagou um símbolo (parêntese, espaço, traço)? apaga também o número antes dele
-  if (e.inputType === 'deleteContentBackward' && antes && novo.replace(/\D/g, '') === antes) {
-    novo = formataTel('+' + antes.slice(0, -1), pais);
+  if (!el.matches('.tel-num')) return;
+  const wrap = el.closest('[data-tel]'), sel = wrap.querySelector('.ddi-sel');
+  let bruto = el.value.trim(), d = bruto.replace(/\D/g, '');
+  // colou/digitou com +código → descobre o país e separa o número
+  if (bruto.startsWith('+')) {
+    let achou = false;
+    if (LPN && d.length >= 2) {
+      try {
+        const a = new LPN.AsYouType(); a.input('+' + d);
+        const c = a.getCountry();
+        if (c && !BLOQUEADOS.includes(c) && sel.querySelector(`option[value="${c}"]`)) {
+          sel.value = c; sel.dataset.manual = '1'; d = a.getNationalNumber() || ''; achou = true;
+        }
+      } catch(err){}
+    }
+    if (!achou) {                                    // ainda digitando o código: deixa como está
+      el.value = '+' + d.slice(0, 15); el.dataset.dig = '';
+      wrap.querySelector('input[type=hidden]').value = el.value;
+      return;
+    }
+  } else if (sel.value === 'BR' && d.startsWith('55') && d.length >= 12) {
+    d = d.slice(2);                                  // colou 5541999999999
   }
-  el.value = novo;
-  el.dataset.dig = novo.replace(/\D/g, '');
+  if (sel.value !== 'IT') d = d.replace(/^0+/, '');   // tira o 0 de discagem local (0xx)
+  const antes = el.dataset.dig || '';
+  // apagou um símbolo (parêntese, espaço, traço)? apaga também o número antes dele
+  if (e.inputType === 'deleteContentBackward' && antes && d === antes) d = d.slice(0, -1);
+  el.value = d;
+  atualizaTel(wrap);
 });
-document.addEventListener('change', e => {
-  if (!e.target.matches('[data-countries]') || !e.target.form) return;
-  const tel = e.target.form.querySelector('input[type="tel"]');
-  if (!tel) return;
-  placeholderTel(tel, e.target.value);
-  if (tel.value) { tel.value = formataTel(tel.value, e.target.value); tel.dataset.dig = tel.value.replace(/\D/g, ''); }
-});
+document.addEventListener('reset', e => setTimeout(() => {
+  $$('[data-tel]', e.target).forEach(w => { const s = w.querySelector('.ddi-sel'); delete s.dataset.manual; s.value = paisPadraoTel(w); atualizaTel(w); });
+}));
 
 async function api(path, data){
   data.idioma = lang;
@@ -1119,7 +1170,7 @@ $$('[data-back]').forEach(b => b.addEventListener('click', () => irPasso(b.datas
 
 $('#to-step2').addEventListener('click', () => {
   const m = $('#co-msg1'), t = T(), f = coForm; clearMsg(m);
-  if (!valida(f)) return showMsg(m, !telValido(f.telefone) && f.telefone.value ? t.telInv : t.obrig);
+  if (!valida(f)) return showMsg(m, telEl(f).value && !telValido(telEl(f)) ? t.telInv : t.obrig);
   if (BLOQUEADOS.includes(f.pais.value)) return showMsg(m, t.paisNao);
   const br = f.pais.value === 'BR';
   if (br && !(cpfValido(f.documento.value) || cnpjValido(f.documento.value))) {
@@ -1191,7 +1242,7 @@ cf.addEventListener('submit', async e => {
   const m = $('#custom-msg'), btn = $('#custom-btn'), t = T(); clearMsg(m);
   const d = dadosCustom();
   if (!d.tipo) return showMsg(m, t.escolhaTipo);
-  if (!valida(cf)) return showMsg(m, !telValido(cf.telefone) && cf.telefone.value ? t.telInv : t.obrig);
+  if (!valida(cf)) return showMsg(m, telEl(cf).value && !telValido(telEl(cf)) ? t.telInv : t.obrig);
   loading(btn, true);
   try {
     await api('/api/personalizado', d);
@@ -1209,7 +1260,7 @@ ctf.addEventListener('submit', async e => {
   e.preventDefault();
   const m = $('#contact-msg'), btn = $('#contact-btn'); clearMsg(m);
   if (!valida(ctf)) return showMsg(m, T().obrig);
-  if (ctf.telefone.value && !telValido(ctf.telefone)) { ctf.telefone.closest('.field').classList.add('bad'); return showMsg(m, T().telInv); }
+  if (telEl(ctf).value && !telValido(telEl(ctf))) { telEl(ctf).closest('.field').classList.add('bad'); return showMsg(m, T().telInv); }
   const fd = Object.fromEntries(new FormData(ctf)); fd.aceite = !!fd.aceite;
   loading(btn, true);
   try { await api('/api/contato', fd); showMsg(m, T().msgOk, 'ok'); ctf.reset(); }
