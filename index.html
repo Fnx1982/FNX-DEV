@@ -81,7 +81,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,12,.
 .browser-bar i{width:10px;height:10px;border-radius:50%;background:#3a3a3f}
 .browser-bar i:nth-child(1){background:#ff5f57}.browser-bar i:nth-child(2){background:#febc2e}.browser-bar i:nth-child(3){background:#28c840}
 .browser-bar span{margin-left:10px;font-size:.75rem;color:var(--dim);background:#1a1a1d;border-radius:6px;padding:3px 10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hero-visual{position:relative}
+.hero-visual{position:relative;width:100%;max-width:500px;justify-self:end}
+.hero-shot{aspect-ratio:1917/968;overflow:hidden;background:#0b0b0c}
+.hero-shot img{width:100%!important;height:100%!important;max-width:none;object-fit:cover;object-position:top left}
+
 .hero-visual .float{position:absolute;bottom:-22px;left:-22px;background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center;box-shadow:0 20px 40px -20px #000}
 .float b{display:block;font-size:.95rem}.float small{color:var(--muted);font-size:.78rem}
 .ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(255,106,0,.12);color:var(--or);flex:none}
@@ -278,6 +281,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
   .summary{position:static}
   .f-cols{grid-template-columns:1fr 1fr}
   .hero-visual .float{left:12px;bottom:-18px}
+  .hero-visual{justify-self:center}
 }
 @media (max-width:600px){
   .section{padding:72px 0}
@@ -357,7 +361,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
     <div class="hero-visual">
       <div class="browser">
         <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
-        <img src="assets/projetos/fnx-tech-2.webp" alt="FNX TECH" width="1917" height="968" fetchpriority="high">
+        <div class="hero-shot"><img src="assets/projetos/fnx-tech-2.webp" alt="FNX TECH" fetchpriority="high"></div>
       </div>
       <div class="float">
         <div class="ico"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/></svg></div>
