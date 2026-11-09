@@ -82,7 +82,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,12,.
 .browser-bar i:nth-child(1){background:#ff5f57}.browser-bar i:nth-child(2){background:#febc2e}.browser-bar i:nth-child(3){background:#28c840}
 .browser-bar span{margin-left:10px;font-size:.75rem;color:var(--dim);background:#1a1a1d;border-radius:6px;padding:3px 10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hero-visual{position:relative}
-.browser > img{width:100%;height:auto;aspect-ratio:1917/968;object-fit:cover;object-position:top left}
 .hero-visual .float{position:absolute;bottom:-22px;left:-22px;background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center;box-shadow:0 20px 40px -20px #000}
 .float b{display:block;font-size:.95rem}.float small{color:var(--muted);font-size:.78rem}
 .ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(255,106,0,.12);color:var(--or);flex:none}
@@ -114,7 +113,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(11,11,12,.
 .chips span{font-size:.78rem;color:#d4d4d8;background:var(--card2);border:1px solid var(--line);padding:5px 10px;border-radius:8px}
 .link-out{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--or)}
 .link-out:hover{text-decoration:underline}
-.link-privado{display:inline-flex;align-items:flex-start;gap:2px;font-size:.88rem;color:var(--muted);line-height:1.45}
 .mock{position:absolute;inset:0;background:#E3E3DF;color:#141414;padding:7% 8%;display:flex;flex-direction:column;justify-content:center}
 .mock h4{font-size:clamp(1rem,2.4vw,1.7rem);font-weight:800;letter-spacing:-.02em;max-width:70%;line-height:1.15}
 .mock p{font-size:clamp(.6rem,1vw,.8rem);color:#555;margin:8px 0 14px;max-width:60%}
@@ -309,10 +307,13 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <a href="#contato" data-en="Contact">Contato</a>
     </nav>
     <div class="nav-right">
-      <!-- Idioma e moeda andam juntos: PT = reais, EN = dólar -->
-      <div class="cur" role="group" aria-label="Idioma e moeda / Language and currency">
-        <button type="button" data-lang="pt" class="on" title="Português — preços em reais">PT · R$</button>
-        <button type="button" data-lang="en" title="English — prices in US dollars">EN · US$</button>
+      <div class="cur" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="pt" class="on">PT</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="cur" role="group" aria-label="Moeda / Currency">
+        <button type="button" data-cur="brl" class="on">R$</button>
+        <button type="button" data-cur="usd">US$</button>
       </div>
       <a href="#planos" class="btn btn-primary" style="padding:10px 18px" data-en="See plans">Ver planos</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
@@ -347,7 +348,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
     </div>
     <div class="hero-visual">
       <div class="browser">
-        <div class="browser-bar"><i></i><i></i><i></i><span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b data-en="Private system · restricted access" style="font-weight:600">Sistema privado · acesso restrito</b></span></div>
+        <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
         <img src="assets/projetos/fnx-tech-2.webp" alt="FNX TECH" width="1917" height="968" fetchpriority="high">
       </div>
       <div class="float">
@@ -389,17 +390,20 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
     </div>
 
     <div class="projects">
-      <article class="card proj reveal" data-gallery>
+      <article class="card proj reveal">
         <div class="proj-media">
           <div class="browser">
             <div class="browser-bar"><i></i><i></i><i></i><span>molinagrowthagency.com</span></div>
-            <div class="shot"><img src="assets/projetos/molina-1.webp" alt="Molina Growth Agency" loading="lazy" data-main></div>
-          </div>
-          <div class="thumbs">
-            <button class="on" data-src="assets/projetos/molina-1.webp" aria-label="1"><img src="assets/projetos/molina-1.webp" alt="" loading="lazy"></button>
-            <button data-src="assets/projetos/molina-2.webp" aria-label="2"><img src="assets/projetos/molina-2.webp" alt="" loading="lazy"></button>
-            <button data-src="assets/projetos/molina-3.webp" aria-label="3"><img src="assets/projetos/molina-3.webp" alt="" loading="lazy"></button>
-            <button data-src="assets/projetos/molina-4.webp" aria-label="4"><img src="assets/projetos/molina-4.webp" alt="" loading="lazy"></button>
+            <div class="shot">
+              <!-- Mockup automático. Para usar um print real, salve em assets/projetos/molina.webp -->
+              <div class="mock" aria-hidden="true">
+                <span class="pill">£ / $</span>
+                <h4>More enquiries for your local business.</h4>
+                <p>Google Ads &amp; Meta Ads planned, run and reported for local businesses in the UK and US.</p>
+                <div class="mp"><div>Starter<small>one ad platform</small></div><div>Premium<small>Google, Meta &amp; social</small></div><div>Custom<small>pick your services</small></div></div>
+              </div>
+              <img src="assets/projetos/molina.webp" alt="Molina Growth Agency" onerror="this.remove()" style="position:relative" loading="lazy">
+            </div>
           </div>
         </div>
         <div class="proj-body">
@@ -414,7 +418,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <article class="card proj reveal" data-gallery>
         <div class="proj-media">
           <div class="browser">
-            <div class="browser-bar"><i></i><i></i><i></i><span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b data-en="Private system · restricted access" style="font-weight:600">Sistema privado · acesso restrito</b></span></div>
+            <div class="browser-bar"><i></i><i></i><i></i><span>sistema.fnxholding.com</span></div>
             <div class="shot"><img src="assets/projetos/fnx-tech-1.webp" alt="FNX TECH" loading="lazy" data-main></div>
           </div>
           <div class="thumbs">
@@ -427,14 +431,14 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
           <h3>FNX TECH</h3>
           <p data-en="Complete internal system for a tech company: team and access control, finance, metrics and reports, projects, CRM/pipeline, Trello-style boards, billing, file drive, meetings and time bank.">Sistema interno completo para empresa de tecnologia: equipe e acessos, financeiro, métricas e relatórios, projetos, CRM/pipeline, boards estilo Trello, cobranças, drive de arquivos, reuniões e banco de horas.</p>
           <div class="chips"><span data-en="Login &amp; access levels">Login e níveis de acesso</span><span data-en="Kanban boards">Boards (Kanban)</span><span data-en="Finance">Financeiro</span><span data-en="Calendar">Agenda</span><span data-en="Responsive">Responsivo</span></div>
-          <span class="link-privado"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span data-en="Private system — access only for the client's team. Video demo on request.">Sistema privado — acesso só para a equipe do cliente. Demonstração em vídeo sob pedido.</span></span>
+          <a class="link-out" href="https://sistema.fnxholding.com" target="_blank" rel="noopener"><span data-en="Open system">Acessar sistema</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
         </div>
       </article>
 
       <article class="card proj reveal" data-gallery>
         <div class="proj-media">
           <div class="browser">
-            <div class="browser-bar"><i></i><i></i><i></i><span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b data-en="Private system · restricted access" style="font-weight:600">Sistema privado · acesso restrito</b></span></div>
+            <div class="browser-bar"><i></i><i></i><i></i><span>sistema.engjob.com.br</span></div>
             <div class="shot"><img src="assets/projetos/engjob-1.webp" alt="Eng Job" loading="lazy" data-main></div>
           </div>
           <div class="thumbs">
@@ -448,7 +452,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
           <h3 data-en="Eng Job — Engineering &amp; Maintenance">Eng Job — Engenharia e Manutenção</h3>
           <p data-en="Management system for an engineering company: registrations, employees, bank statements, commissions, job sites, materials and storage, payment slips, invoices, proposals, technical visits, time tracking and calendar.">Sistema de gestão para empresa de engenharia: cadastro, funcionários, extratos bancários, comissões, obras, materiais e armazenamento, boletos, notas fiscais, propostas, visitas técnicas, controle de ponto e calendário.</p>
           <div class="chips"><span data-en="Job sites &amp; proposals">Obras e propostas</span><span data-en="Invoices">Notas e boletos</span><span data-en="Time tracking">Controle de ponto</span><span data-en="Reports">Relatórios</span><span>Cloudflare</span></div>
-          <span class="link-privado"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" style="vertical-align:-1px;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span data-en="Private system — access only for the client's team. Video demo on request.">Sistema privado — acesso só para a equipe do cliente. Demonstração em vídeo sob pedido.</span></span>
+          <a class="link-out" href="https://sistema.engjob.com.br" target="_blank" rel="noopener"><span data-en="Open system">Acessar sistema</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
         </div>
       </article>
     </div>
@@ -597,7 +601,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
         <div class="f-grid">
           <div class="field"><label><span data-en="Your name">Seu nome</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
           <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"></div>
-          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (00) 00000-0000" data-en-ph="+1 555 000 0000"></div>
+          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (41) 9 9999-9999" data-en-ph="+1 5550000000"></div>
           <div class="field"><label><span data-en="Country">País</span> <em>*</em></label><select name="pais" required data-countries></select></div>
           <div class="field"><label data-en="Company">Empresa</label><input name="empresa" autocomplete="organization"></div>
           <div class="field"><label data-en="Current website or reference">Site atual ou referência</label><input name="referencia" placeholder="https://"></div>
@@ -710,7 +714,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <div class="f-grid">
         <div class="field"><label><span data-en="Name">Nome</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
         <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"></div>
-        <div class="field full"><label>WhatsApp</label><input name="telefone" type="tel" autocomplete="tel"></div>
+        <div class="field full"><label>WhatsApp</label><input name="telefone" type="tel" autocomplete="tel" placeholder="+55 (41) 9 9999-9999" data-en-ph="+1 5550000000"></div>
         <div class="field full"><label data-en="Subject">Assunto</label>
           <select name="assunto">
             <option value="Quero contratar um plano" data-en="I want to buy a plan">Quero contratar um plano</option>
@@ -785,7 +789,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
         <div class="f-grid">
           <div class="field full"><label><span data-en="Full name">Nome completo</span> <em>*</em></label><input name="nome" required autocomplete="name"></div>
           <div class="field"><label>E-mail <em>*</em></label><input name="email" type="email" required autocomplete="email"><small data-en="Your receipt and contract go to this email.">O recibo e o contrato vão para este e-mail.</small></div>
-          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (00) 00000-0000" data-en-ph="+1 555 000 0000"></div>
+          <div class="field"><label>WhatsApp <em>*</em></label><input name="telefone" type="tel" required autocomplete="tel" placeholder="+55 (41) 9 9999-9999" data-en-ph="+1 5550000000"></div>
           <div class="field"><label><span data-en="Country">País</span> <em>*</em></label><select name="pais" required data-countries></select></div>
           <div class="field"><label id="doc-label"></label><input name="documento" required autocomplete="off"><small id="doc-help"></small></div>
           <div class="field"><label><span data-en="City / State">Cidade / Estado</span> <em>*</em></label><input name="cidade" required autocomplete="address-level2"></div>
@@ -822,6 +826,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
   </div>
 </div>
 
+<script src="assets/js/libphonenumber-min.js"></script>
 <script>
 /* ====================================================================
    CONFIGURAÇÃO
@@ -861,7 +866,7 @@ const TXT = {
   pt:{ unico:'único', parcelas:'ou até 12x no cartão', cartaoInt:'Cartão internacional', pop:'MAIS ESCOLHIDO', contratar:'Contratar', plano:'Plano',
        pagUnico:'pagamento único', ate12:'até 12x no cartão', docBR:'CPF ou CNPJ', docEX:'Documento / Tax ID', docHelpBR:'Necessário para o contrato e a nota.',
        docHelpEX:'Passaporte, ID nacional ou número fiscal da empresa.', obrig:'Preencha os campos obrigatórios destacados.', paisNao:'Infelizmente não atendemos o país selecionado.',
-       docInv:'CPF ou CNPJ inválido.', marque:'Para continuar, marque todas as confirmações.', escolhaTipo:'Escolha o tipo de projeto.',
+       docInv:'CPF ou CNPJ inválido.', telInv:'WhatsApp inválido. Use o formato +55 (41) 9 9999-9999.', marque:'Para continuar, marque todas as confirmações.', escolhaTipo:'Escolha o tipo de projeto.',
        enviado:'Pedido enviado! Respondemos em até 1 dia útil. Você também recebeu uma cópia por e-mail.', msgOk:'Mensagem enviada! Retornamos em breve.',
        falha:'Não foi possível enviar agora. Tente novamente ou fale com a gente pelo WhatsApp.', vazio:'Marque as opções ao lado.', selecione:'Selecione',
        r:{plano:'Plano',nome:'Nome',email:'E-mail',tel:'WhatsApp',docBR:'CPF/CNPJ',docEX:'Documento',empresa:'Empresa',end:'Endereço',total:'Total'},
@@ -871,7 +876,7 @@ const TXT = {
   en:{ unico:'one-time', parcelas:'', cartaoInt:'International card payment', pop:'MOST POPULAR', contratar:'Get', plano:'Plan',
        pagUnico:'one-time payment', ate12:'', docBR:'CPF or CNPJ', docEX:'ID / Tax number', docHelpBR:'Required for the contract and invoice.',
        docHelpEX:'Passport, national ID or company tax number.', obrig:'Please fill in the highlighted required fields.', paisNao:"Sorry, we don't serve the selected country.",
-       docInv:'Invalid CPF or CNPJ.', marque:'To continue, please tick all confirmations.', escolhaTipo:'Choose the project type.',
+       docInv:'Invalid CPF or CNPJ.', telInv:'Invalid WhatsApp number. Include the country code, e.g. +1 5550000000.', marque:'To continue, please tick all confirmations.', escolhaTipo:'Choose the project type.',
        enviado:"Request sent! We'll reply within 1 business day. A copy was sent to your email.", msgOk:"Message sent! We'll get back to you soon.",
        falha:"We couldn't send it right now. Please try again or reach us on WhatsApp.", vazio:'Pick the options on the left.', selecione:'Select',
        r:{plano:'Plan',nome:'Name',email:'Email',tel:'WhatsApp',docBR:'CPF/CNPJ',docEX:'ID / Tax number',empresa:'Company',end:'Address',total:'Total'},
@@ -885,9 +890,7 @@ const $ = (s, el=document) => el.querySelector(s);
 const $$ = (s, el=document) => [...el.querySelectorAll(s)];
 const store = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
 let lang = store.get('fnx_lang') || ((navigator.language||'pt').toLowerCase().startsWith('pt') ? 'pt' : 'en');
-// A moeda segue o idioma: português = reais (BRL), inglês = dólar (USD)
-const moedaDoIdioma = l => (l === 'en' ? 'usd' : 'brl');
-let moeda = moedaDoIdioma(lang);
+let moeda = store.get('fnx_moeda') || (lang === 'en' ? 'usd' : 'brl');
 const T = () => TXT[lang];
 const fmt = (v, c) => c === 'brl'
   ? 'R$ ' + v.toLocaleString(lang==='en'?'en-US':'pt-BR')
@@ -918,9 +921,7 @@ function aplicaIdioma(){
   if (planoAtual) atualizaSubtitulo();
 }
 $$('[data-lang]').forEach(b => b.addEventListener('click', () => {
-  lang = b.dataset.lang; store.set('fnx_lang', lang);
-  moeda = moedaDoIdioma(lang);   // troca os valores junto com o idioma
-  aplicaIdioma();
+  lang = b.dataset.lang; store.set('fnx_lang', lang); aplicaIdioma();
 }));
 
 /* ---------- planos ---------- */
@@ -945,9 +946,11 @@ function renderFaixas(){
     `<label class="opt"><input type="radio" name="orcamento" value="${esc(f)}" ${i===idx?'checked':''}><span>${esc(f)}</span></label>`).join('');
 }
 function setMoeda(c){
-  moeda = c;
+  moeda = c; store.set('fnx_moeda', c);
+  $$('[data-cur]').forEach(b => b.classList.toggle('on', b.dataset.cur === c));
   renderPlanos(); renderFaixas(); atualizaResumo();
 }
+$$('[data-cur]').forEach(b => b.addEventListener('click', () => setMoeda(b.dataset.cur)));
 
 /* ---------- países (lista ISO sem os bloqueados) ---------- */
 const ISO = 'AD AE AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BZ CA CC CG CH CI CK CL CM CN CO CR CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IS IT JE JM JO JP KE KG KH KI KM KN KR KW KY KZ LA LB LC LI LK LR LS LT LU LV MA MC MD ME MF MG MH MK ML MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RW SA SB SC SE SG SH SI SJ SK SL SM SN SR ST SV SX SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VG VI VN VU WF WS XK YT ZA ZM ZW'.split(' ');
@@ -972,6 +975,7 @@ function valida(container){
     const f = el.closest('.field');
     let bad = el.type === 'checkbox' ? !el.checked : !String(el.value).trim();
     if (!bad && el.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
+    if (!bad && el.type === 'tel') bad = !telValido(el);
     if (f) f.classList.toggle('bad', bad);
     if (bad) ok = false;
   });
@@ -986,6 +990,92 @@ function cpfValido(c){ c=soDigitos(c); if(c.length!==11||/^(\d)\1+$/.test(c))ret
 function cnpjValido(c){ c=soDigitos(c); if(c.length!==14||/^(\d)\1+$/.test(c))return false;
   const calc=n=>{let s=0,p=n-7;for(let i=0;i<n;i++){s+=+c[i]*p--;if(p<2)p=9}const r=s%11;return r<2?0:11-r};
   return calc(12)===+c[12]&&calc(13)===+c[13]; }
+
+
+/* ---------- máscara do WhatsApp (adapta ao país) ----------
+   Brasil: +55 (41) 9 9555-3699  (fixo: +55 (41) 3333-4444)
+   Outros países: formato oficial de cada país, pela biblioteca libphonenumber
+   (arquivo assets/js/libphonenumber-min.js). Ex.: +1 213 373 4253 · +351 912 345 678 · +44 7400 123456 */
+const LPN = window.libphonenumber || null;   // se o arquivo não carregar, o campo continua funcionando sem formatação
+function paisDoTel(input){
+  const sel = input.form && input.form.querySelector('[data-countries]');
+  return sel ? sel.value : (lang === 'en' ? '' : 'BR');
+}
+function ddi(pais){ try { return pais && LPN ? String(LPN.getCountryCallingCode(pais)) : ''; } catch(e){ return ''; } }
+
+function formataBR(bruto, d){
+  const semEspaco = bruto.replace(/\s/g, '');
+  if (semEspaco === '+55') return '+55 (';
+  if (bruto.startsWith('+') && !bruto.startsWith('+55')) {     // número de outro país digitado com +
+    if ('+55'.startsWith(semEspaco)) return semEspaco;
+    return formataIntl('+' + d, '');
+  }
+  if (bruto.startsWith('+55') || (d.startsWith('55') && d.length >= 12)) d = d.slice(2);
+  d = d.slice(0, 11);
+  if (!d) return '';
+  let out = '+55 (' + d.slice(0, 2);
+  if (d.length <= 2) return out;
+  out += ') ';
+  let n = d.slice(2);
+  if (n[0] === '9') {                 // celular: 9 9999-9999
+    n = n.slice(0, 9);
+    out += n.slice(0, 1);
+    if (n.length > 1) out += ' ' + n.slice(1, 5);
+    if (n.length > 5) out += '-' + n.slice(5);
+  } else {                            // fixo: 3333-4444
+    n = n.slice(0, 8);
+    out += n.slice(0, 4);
+    if (n.length > 4) out += '-' + n.slice(4);
+  }
+  return out;
+}
+function formataIntl(bruto, pais){
+  let d = bruto.replace(/\D/g, '');
+  if (!d) return bruto.trim() === '+' ? '+' : '';
+  const cod = ddi(pais);
+  // digitou sem "+": coloca o código do país escolhido na frente (e tira o 0 de discagem local)
+  if (!bruto.trim().startsWith('+') && cod && !d.startsWith(cod)) {
+    if (d[0] === '0' && pais !== 'IT') d = d.slice(1);
+    d = cod + d;
+  }
+  d = d.slice(0, 15);
+  if (!LPN) return '+' + d;
+  try { return new LPN.AsYouType().input('+' + d); } catch(e){ return '+' + d; }
+}
+function formataTel(valor, pais){
+  const bruto = String(valor || '').trim();
+  return pais === 'BR' ? formataBR(bruto, bruto.replace(/\D/g, '')) : formataIntl(bruto, pais);
+}
+function telValido(el){
+  const d = el.value.replace(/\D/g, '');
+  if (!d) return !el.required;
+  if (el.value.startsWith('+55 (')) return d.length === 12 || d.length === 13;   // 55 + DDD + 8 ou 9 dígitos
+  if (LPN) { try { return LPN.isPossiblePhoneNumber('+' + d); } catch(e){} }
+  return d.length >= 8 && d.length <= 15;
+}
+function placeholderTel(tel, pais){
+  if (pais === 'BR') tel.placeholder = '+55 (41) 9 9999-9999';
+  else if (ddi(pais)) tel.placeholder = '+' + ddi(pais) + ' …';
+}
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.type !== 'tel') return;
+  const pais = paisDoTel(el), antes = el.dataset.dig || '';
+  let novo = formataTel(el.value, pais);
+  // apagou um símbolo (parêntese, espaço, traço)? apaga também o número antes dele
+  if (e.inputType === 'deleteContentBackward' && antes && novo.replace(/\D/g, '') === antes) {
+    novo = formataTel('+' + antes.slice(0, -1), pais);
+  }
+  el.value = novo;
+  el.dataset.dig = novo.replace(/\D/g, '');
+});
+document.addEventListener('change', e => {
+  if (!e.target.matches('[data-countries]') || !e.target.form) return;
+  const tel = e.target.form.querySelector('input[type="tel"]');
+  if (!tel) return;
+  placeholderTel(tel, e.target.value);
+  if (tel.value) { tel.value = formataTel(tel.value, e.target.value); tel.dataset.dig = tel.value.replace(/\D/g, ''); }
+});
 
 async function api(path, data){
   data.idioma = lang;
@@ -1029,7 +1119,7 @@ $$('[data-back]').forEach(b => b.addEventListener('click', () => irPasso(b.datas
 
 $('#to-step2').addEventListener('click', () => {
   const m = $('#co-msg1'), t = T(), f = coForm; clearMsg(m);
-  if (!valida(f)) return showMsg(m, t.obrig);
+  if (!valida(f)) return showMsg(m, !telValido(f.telefone) && f.telefone.value ? t.telInv : t.obrig);
   if (BLOQUEADOS.includes(f.pais.value)) return showMsg(m, t.paisNao);
   const br = f.pais.value === 'BR';
   if (br && !(cpfValido(f.documento.value) || cnpjValido(f.documento.value))) {
@@ -1101,7 +1191,7 @@ cf.addEventListener('submit', async e => {
   const m = $('#custom-msg'), btn = $('#custom-btn'), t = T(); clearMsg(m);
   const d = dadosCustom();
   if (!d.tipo) return showMsg(m, t.escolhaTipo);
-  if (!valida(cf)) return showMsg(m, t.obrig);
+  if (!valida(cf)) return showMsg(m, !telValido(cf.telefone) && cf.telefone.value ? t.telInv : t.obrig);
   loading(btn, true);
   try {
     await api('/api/personalizado', d);
@@ -1119,6 +1209,7 @@ ctf.addEventListener('submit', async e => {
   e.preventDefault();
   const m = $('#contact-msg'), btn = $('#contact-btn'); clearMsg(m);
   if (!valida(ctf)) return showMsg(m, T().obrig);
+  if (ctf.telefone.value && !telValido(ctf.telefone)) { ctf.telefone.closest('.field').classList.add('bad'); return showMsg(m, T().telInv); }
   const fd = Object.fromEntries(new FormData(ctf)); fd.aceite = !!fd.aceite;
   loading(btn, true);
   try { await api('/api/contato', fd); showMsg(m, T().msgOk, 'ok'); ctf.reset(); }
@@ -1145,6 +1236,7 @@ $$('.reveal').forEach(el => io.observe(el));
 document.addEventListener('input', e => { const f = e.target.closest('.field'); if (f) f.classList.remove('bad'); });
 
 $('#year').textContent = new Date().getFullYear();
+$$('[data-cur]').forEach(b => b.classList.toggle('on', b.dataset.cur === moeda));
 aplicaIdioma();
 </script>
 </body>

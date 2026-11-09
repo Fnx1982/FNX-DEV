@@ -10,7 +10,9 @@ fnx-dev/
 │  ├─ policies.html        ← as mesmas políticas em inglês — EN
 │  ├─ sucesso.html         ← depois de pagar
 │  ├─ cancelado.html       ← se desistir no pagamento
-│  └─ assets/projetos/     ← prints dos projetos
+│  └─ assets/
+│     ├─ projetos/         ← prints dos projetos
+│     └─ js/               ← libphonenumber (formata o WhatsApp de cada país) + licença
 ├─ src/worker.js           ← API: Stripe, e-mails (Resend), bloqueio de países, contrato
 └─ wrangler.jsonc          ← configuração do Worker
 ```

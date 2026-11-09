@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "fnx-dev",
   "main": "src/worker.js",
   "compatibility_date": "2026-11-01",
