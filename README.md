@@ -8,11 +8,13 @@ fnx-dev/
 │  ├─ index.html           ← página principal (planos, projetos, checkout, personalizado, contato)
 │  ├─ politicas.html       ← termos, privacidade, reembolso 7 dias, países, contrato (em branco) — PT
 │  ├─ policies.html        ← as mesmas políticas em inglês — EN
+│  ├─ _headers             ← evita o navegador mostrar versão antiga do site
 │  ├─ sucesso.html         ← depois de pagar
 │  ├─ cancelado.html       ← se desistir no pagamento
 │  └─ assets/
 │     ├─ projetos/         ← prints dos projetos
-│     └─ js/               ← libphonenumber (formata o WhatsApp de cada país) + licença
+│     ├─ js/               ← libphonenumber (formata o WhatsApp de cada país) + licença
+│     └─ fonts/            ← fonte Montserrat hospedada no próprio site (sem Google Fonts)
 ├─ src/worker.js           ← API: Stripe, e-mails (Resend), bloqueio de países, contrato
 └─ wrangler.jsonc          ← configuração do Worker
 ```

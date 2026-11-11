@@ -1,0 +1,5 @@
+# Faz o navegador sempre conferir se existe versão nova das páginas (evita ver o site antigo guardado em cache)
+/
+  Cache-Control: no-cache
+/*.html
+  Cache-Control: no-cache

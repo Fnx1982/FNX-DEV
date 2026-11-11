@@ -40,7 +40,7 @@ const BLOQUEADOS = {
 // {{EMPRESA}} {{PLANO}} {{VALOR}} {{DATA}} {{PEDIDO}} {{DESCRICAO}}
 const CONTRATO_TEXTO = ``;      // contrato em português (clientes do Brasil)
 const CONTRATO_TEXTO_EN = ``;   // contrato em inglês (clientes do exterior) — se vazio, usa o português
-const VERSAO_POLITICAS = '2026-11-08';
+const VERSAO_POLITICAS = '2026-11-09';
 
 // ============ TEXTOS PARA O CLIENTE ============
 const MSG = {
@@ -243,14 +243,38 @@ async function rotaContato(request, env) {
   if (!d.nome || !emailOk(d.email) || !d.mensagem) return erro(m.obrig);
   if (!d.aceite) return erro(m.privacidade);
   const assunto = limpa(d.assunto, 80) || 'Contato';
-  const destino = /suporte|reembolso/i.test(assunto) ? (env.SUPPORT_EMAIL || env.SALES_EMAIL) : env.SALES_EMAIL;
+  const ehReembolso = /reembolso|cancelamento/i.test(assunto);
+  const ehPrivacidade = /privacidade|lgpd/i.test(assunto);
+  const destino = (/suporte/i.test(assunto) || ehReembolso || ehPrivacidade) ? (env.SUPPORT_EMAIL || env.SALES_EMAIL) : env.SALES_EMAIL;
+  const recebidoEm = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+  let aviso = '';
+  if (ehReembolso) aviso = `<p style="background:#fff7f0;border-left:3px solid #ff6a00;padding:10px 12px;border-radius:0 8px 8px 0"><b>Pedido de reembolso/cancelamento.</b> Confira se está dentro dos 7 dias da compra. Se estiver, faça o estorno na Stripe <b>imediatamente</b> (Payments → pagamento → Refund) e não entregue nada do projeto. O cliente já recebeu a confirmação automática de recebimento.</p>`;
+  if (ehPrivacidade) aviso = `<p style="background:#fff7f0;border-left:3px solid #ff6a00;padding:10px 12px;border-radius:0 8px 8px 0"><b>Pedido sobre dados pessoais (LGPD).</b> Prazo para responder: até 15 dias a partir de ${esc(recebidoEm)}. O cliente já recebeu a confirmação automática de recebimento.</p>`;
 
   await enviarEmail(env, {
     to: destino, reply_to: d.email,
     subject: `[Site] ${assunto} — ${d.nome}`,
-    html: layout('Nova mensagem pelo site', tabela([['Nome', d.nome], ['E-mail', d.email], ['WhatsApp', limpa(d.telefone, 40)], ['Assunto', assunto], ['Idioma', L === 'en' ? 'Inglês' : 'Português']])
+    html: layout('Nova mensagem pelo site', aviso + tabela([['Nome', d.nome], ['E-mail', d.email], ['WhatsApp', limpa(d.telefone, 40)], ['Assunto', assunto], ['Recebido em', recebidoEm], ['Idioma', L === 'en' ? 'Inglês' : 'Português']])
       + `<p style="white-space:pre-wrap;margin-top:16px">${esc(d.mensagem)}</p>`),
   });
+
+  // Confirmação automática para o cliente (pedido de cancelamento/reembolso e pedidos de dados — Decreto 7.962/2013 e LGPD)
+  if (ehReembolso || ehPrivacidade) {
+    const primeiro = esc(d.nome.split(' ')[0]);
+    const html = L === 'en'
+      ? layout('We received your request', `<p>Hi ${primeiro}! This confirms we received your ${ehReembolso ? 'cancellation/refund' : 'personal data'} request on ${esc(recebidoEm)} (Brasília time).</p>
+          <p>${ehReembolso ? "If it is within 7 days of your purchase, we will request the full refund from Stripe right away and email you once it is processed." : "We will reply within 15 days."}</p>
+          <p style="white-space:pre-wrap;background:#fafafa;border-radius:8px;padding:12px">${esc(d.mensagem)}</p>`)
+      : layout('Recebemos o seu pedido', `<p>Olá, ${primeiro}! Confirmamos que recebemos o seu pedido de ${ehReembolso ? 'cancelamento/reembolso' : 'informação sobre dados pessoais (LGPD)'} em ${esc(recebidoEm)}.</p>
+          <p>${ehReembolso ? 'Se estiver dentro dos 7 dias da compra, pedimos o estorno integral à Stripe imediatamente e avisamos você por e-mail quando for processado.' : 'Respondemos em até 15 dias.'}</p>
+          <p style="white-space:pre-wrap;background:#fafafa;border-radius:8px;padding:12px">${esc(d.mensagem)}</p>`);
+    await enviarEmail(env, {
+      to: d.email, reply_to: env.SUPPORT_EMAIL || env.SALES_EMAIL,
+      subject: L === 'en' ? 'We received your request — FNX DEV' : 'Recebemos o seu pedido — FNX DEV',
+      html,
+    }).catch(e => console.error('Falha confirmação cliente', e));
+  }
   return json({ ok: true });
 }
 
