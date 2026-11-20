@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32.png?v=2">
+<link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon.png">
+<meta name="theme-color" content="#0b0b0c">
+<link href="assets/fonts/fonts.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Montserrat',system-ui,sans-serif;background:#0b0b0c;color:#f5f5f6;min-height:100vh;line-height:1.6;
+background-image:radial-gradient(700px 500px at 50% -10%,rgba(255,106,0,.16),transparent 60%)}
+a{color:#ff6a00}
+header{display:flex;justify-content:space-between;align-items:center;max-width:720px;margin:0 auto;padding:22px}
+header img{height:36px;display:block}
+.lang{display:flex;background:#151517;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:4px}
+.lang button{border:0;background:transparent;color:#a3a3ab;font:700 .8rem Montserrat,sans-serif;padding:6px 11px;border-radius:999px;cursor:pointer}
+.lang button.on{background:linear-gradient(135deg,#ff7a00,#ff3b1f);color:#fff}
+main{max-width:720px;margin:0 auto;padding:10px 22px 60px}
+.box{background:#151517;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:30px}
+h1{font-size:1.6rem;font-weight:900;margin-bottom:8px}
+p.lead{color:#a3a3ab;margin-bottom:20px}
+.f{margin-bottom:14px}.f label{display:block;font-size:.85rem;font-weight:600;color:#d4d4d8;margin-bottom:6px}
+.f input,.f textarea{width:100%;background:#0f0f11;border:1px solid rgba(255,255,255,.14);border-radius:11px;padding:12px 14px;color:#f5f5f6;font:inherit;outline:none}
+.f input:focus,.f textarea:focus{border-color:#ff6a00}
+.f small{color:#71717a;font-size:.78rem}
+.chk{display:flex;gap:10px;font-size:.88rem;color:#d4d4d8;margin:6px 0 16px}.chk input{accent-color:#ff6a00;width:17px;height:17px;margin-top:3px;flex:none}
+.btn{display:inline-flex;justify-content:center;width:100%;border:0;border-radius:12px;padding:14px 22px;font:700 1rem Montserrat,sans-serif;color:#fff;background:linear-gradient(135deg,#ff7a00,#ff3b1f);cursor:pointer}
+.btn[disabled]{opacity:.55}
+.msg{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:.92rem;display:none}
+.msg.err{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:#fca5a5}
+.msg.ok{display:block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);color:#86efac}
+.hp{position:absolute;left:-9999px}
+.info{margin-top:18px;font-size:.85rem;color:#a3a3ab}
+[data-l="en"]{display:none} body.en [data-l="pt"]{display:none} body.en [data-l="en"]{display:revert}
+footer{text-align:center;color:#71717a;font-size:.82rem;padding:0 22px 30px}
+</style>
+<title>Aprovar entrega — FNX DEV</title></head>
+<body data-title-pt="Aprovar entrega — FNX DEV" data-title-en="Approve delivery — FNX DEV">
+<header><a href="/" aria-label="FNX DEV"><img src="/assets/logo/fnx-dev-branca.png" alt="FNX DEV" width="111" height="36"></a>
+<div class="lang"><button type="button" data-set="pt" class="on">PT</button><button type="button" data-set="en">EN</button></div></header>
+<main><div class="box">
+  <h1><span data-l="pt">Aprovar a entrega do projeto</span><span data-l="en">Approve your project delivery</span></h1>
+  <p class="lead" id="intro"><span data-l="pt">Carregando o seu pedido…</span><span data-l="en">Loading your order…</span></p>
+  <div id="area" style="display:none">
+    <p style="color:#d4d4d8;margin-bottom:14px"><span data-l="pt">Ao aprovar, você confirma que recebeu o projeto conforme o escopo contratado. A partir de hoje começa a <b>garantia de 90 dias</b>: erros e bugs do que desenvolvemos são corrigidos sem custo.</span><span data-l="en">By approving, you confirm you received the project according to the purchased scope. Your <b>90-day warranty</b> starts today: bugs in the work we built are fixed free of charge.</span></p>
+    <label class="chk"><input type="checkbox" id="ok"><span><span data-l="pt">Recebi o projeto e aprovo a entrega.</span><span data-l="en">I received the project and approve the delivery.</span></span></label>
+    <button class="btn" id="b" type="button"><span data-l="pt">Aprovar entrega</span><span data-l="en">Approve delivery</span></button>
+    <p class="info"><span data-l="pt">Encontrou algum problema? Não aprove ainda: responda o e-mail da entrega ou escreva para <a href="mailto:suporte.fnxtech@gmail.com">suporte.fnxtech@gmail.com</a>.</span><span data-l="en">Found a problem? Don't approve yet: reply to the delivery email or write to <a href="mailto:suporte.fnxtech@gmail.com">suporte.fnxtech@gmail.com</a>.</span></p>
+  </div>
+  <div class="msg" id="m"></div>
+</div></main>
+<footer>© 2026 FNX DEV · Yan Victor Figueiredo Szaida · CPF 073.847.949-78 · <a href="politicas.html">Políticas</a> / <a href="policies.html">Policies</a></footer>
+<script>
+let lang='pt'; try{ lang = localStorage.getItem('fnx_lang') || ((navigator.language||'pt').toLowerCase().startsWith('pt')?'pt':'en'); }catch(e){}
+function setLang(l){ lang=l; document.body.classList.toggle('en', l==='en'); document.documentElement.lang = l==='en'?'en':'pt-BR';
+  document.querySelectorAll('[data-set]').forEach(b=>b.classList.toggle('on', b.dataset.set===l));
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{ if(!el.dataset.phPt) el.dataset.phPt=el.placeholder; el.placeholder = l==='en'?el.dataset.phEn:el.dataset.phPt; });
+  document.title = document.body.dataset[l==='en'?'titleEn':'titlePt'];
+  try{ localStorage.setItem('fnx_lang', l); }catch(e){} }
+document.querySelectorAll('[data-set]').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.set)));
+function msg(el, txt, tipo){ el.className='msg '+tipo; el.textContent=txt; }
+
+setLang(lang);
+const q=new URLSearchParams(location.search), pedido=q.get('pedido')||'', t=q.get('t')||'';
+const intro=document.getElementById('intro'), area=document.getElementById('area'), m=document.getElementById('m'), b=document.getElementById('b');
+function feito(j){ area.style.display='none'; intro.style.display='none';
+  msg(m, lang==='en' ? `Delivery approved on ${j.aprovadoEm}. Your 90-day bug warranty is valid until ${j.garantiaAte}.` : `Entrega aprovada em ${j.aprovadoEm}. Sua garantia de 90 dias contra bugs vale até ${j.garantiaAte}.`, 'ok'); }
+async function chamar(confirmar){
+  const r=await fetch('/api/aprovar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pedido,t,idioma:lang,confirmar})});
+  const j=await r.json().catch(()=>({})); if(!r.ok||!j.ok) throw new Error(j.erro||''); return j; }
+(async()=>{
+  try{ const j=await chamar(false);
+    if(j.jaAprovado) return feito(j);
+    intro.innerHTML = lang==='en' ? `Hi ${j.nome||''}! Order: <b>${pedido.slice(-10).toUpperCase()}</b> · ${j.plano} plan.` : `Olá, ${j.nome||''}! Pedido: <b>${pedido.slice(-10).toUpperCase()}</b> · Plano ${j.plano}.`;
+    area.style.display='block';
+  }catch(e){ intro.style.display='none'; msg(m, e.message || (lang==='en'?'Invalid link.':'Link inválido.'),'err'); }
+})();
+b.addEventListener('click', async()=>{
+  if(!document.getElementById('ok').checked) return msg(m, lang==='en'?'Please tick the box to approve.':'Marque a caixa para aprovar.','err');
+  b.disabled=true; try{ feito(await chamar(true)); }catch(e){ b.disabled=false; msg(m, e.message||'Erro','err'); }
+});
+</script></body></html>
