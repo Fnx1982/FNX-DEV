@@ -39,11 +39,16 @@ const BLOQUEADOS = {
 // O contrato fica em PDF dentro do site (public/assets/contrato/).
 // Mudou o texto? Gere um PDF novo com outro número de versão e troque aqui
 // (os pedidos antigos continuam ligados à versão que o cliente aceitou).
-const VERSAO_CONTRATO = '1.1';
-const CONTRATO_PDF = {
-  pt: '/assets/contrato/contrato-fnx-dev-v1.1-pt.pdf',
-  en: '/assets/contrato/contrato-fnx-dev-v1.1-en.pdf',
+const VERSAO_CONTRATO = '1.2';
+// Cada versão: o PDF (para baixar) e o HTML (o texto exato que o cliente lê e assina no checkout).
+// Não apague versões antigas: pedidos antigos continuam ligados à versão que foi assinada.
+const CONTRATOS = {
+  '1.2': {
+    pdf: { pt: '/assets/contrato/contrato-fnx-dev-v1.2-pt.pdf', en: '/assets/contrato/contrato-fnx-dev-v1.2-en.pdf' },
+    html: { pt: '/assets/contrato/contrato-fnx-dev-v1.2-pt.html', en: '/assets/contrato/contrato-fnx-dev-v1.2-en.html' },
+  },
 };
+const CONTRATO_PDF = CONTRATOS[VERSAO_CONTRATO].pdf;
 const VERSAO_POLITICAS = '2026-11-20';
 
 // ============ PRAZO DE DESISTÊNCIA ============
@@ -60,6 +65,7 @@ const MSG = {
     local: 'Infelizmente não atendemos a sua localização.', doc: 'CPF ou CNPJ inválido.',
     aceites: 'É preciso aceitar o contrato, os termos e as políticas.', privacidade: 'É preciso aceitar a Política de Privacidade.',
     interno: 'Erro interno. Tente novamente ou fale com a gente pelo WhatsApp.',
+    assinatura: 'Para assinar, digite seu nome completo exatamente como no cadastro.',
   },
   en: {
     plano: 'Invalid plan.', obrig: 'Please fill in all required fields.', desc: 'Please briefly describe the project.',
@@ -67,6 +73,7 @@ const MSG = {
     local: "Sorry, we don't serve your location.", doc: 'Invalid CPF or CNPJ.',
     aceites: 'You must accept the agreement, terms and policies.', privacidade: 'You must accept the Privacy Policy.',
     interno: 'Internal error. Please try again or reach us on WhatsApp.',
+    assinatura: 'To sign, type your full name exactly as entered in your details.',
   },
 };
 
@@ -76,6 +83,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/')) {
+      if (url.pathname === '/api/contrato-assinado' && request.method === 'GET') {
+        try { return await rotaContratoAssinado(request, env); }
+        catch (e) { console.error('Erro contrato assinado', e && e.stack || e); return new Response('Erro ao abrir o contrato.', { status: 500 }); }
+      }
       if (request.method !== 'POST') return json({ ok: false, erro: 'Método não permitido' }, 405);
       try {
         switch (url.pathname) {
@@ -135,6 +146,13 @@ async function rotaCheckout(request, env) {
   const a = d.aceites || {};
   if (!(a.termos && a.privacidade && a.contrato && a.pais)) return erro(m.aceites);
 
+  // Assinatura eletrônica: nome completo digitado, igual ao do cadastro
+  const assinatura = limpa(d.assinatura, 120);
+  if (!assinatura || normalizaNome(assinatura) !== normalizaNome(d.nome) || normalizaNome(assinatura).split(' ').length < 2) return erro(m.assinatura);
+  // Código de integridade (SHA-256) do texto exato do contrato que o cliente leu e assinou
+  const textoContrato = await lerContrato(env, request, VERSAO_CONTRATO, L);
+  const hashContrato = await sha256hex(textoContrato);
+
   const moeda = d.pais === 'BR' ? 'brl' : 'usd';
   const valor = plano[moeda];
   const ip = request.headers.get('CF-Connecting-IP') || '';
@@ -149,6 +167,7 @@ async function rotaCheckout(request, env) {
     desc_1: desc.slice(0, 480), desc_2: desc.slice(480, 960), desc_3: desc.slice(960, 1440),
     aceite_em: agora, aceite_ip: ip, aceite_pais_ip: paisIp, politicas_versao: VERSAO_POLITICAS,
     contrato_versao: VERSAO_CONTRATO, contrato_aceito: 'sim', janela_dias: String(prazoDesistencia(d.pais)),
+    contrato_idioma: L, contrato_sha256: hashContrato, assinatura_nome: assinatura,
     // Reino Unido / UE: o cliente pode pedir para o serviço começar e ser entregue antes dos 14 dias (cláusula 4.11)
     inicio_antecipado: (PAISES_14_DIAS.has(d.pais) && a.antecipado) ? 'sim' : 'nao',
     user_agent: (request.headers.get('User-Agent') || '').slice(0, 300),
@@ -377,13 +396,16 @@ async function pagamentoConfirmado(env, sessionId) {
   const fimEN = fimPrazo.toLocaleDateString('en-GB', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: 'long', day: 'numeric' });
   const dataEN = hoje.toLocaleDateString('en-GB', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: 'long', day: 'numeric' });
   const linkAprovacao = await linkDeAprovacao(env, s.id);
-  const pdfCliente = env.SITE_URL + CONTRATO_PDF[L];
+  const assinado = await montarContratoAssinado(env, s, null);
+  const linkAssinado = `${env.SITE_URL}/api/contrato-assinado?pedido=${encodeURIComponent(s.id)}&t=${await tokenAssinado(env, s.id)}`;
+  const anexoAssinado = { filename: `${L === 'en' ? 'Signed-Agreement' : 'Contrato-assinado'}-FNX-DEV-${pedido}.html`, content: base64Utf8(assinado.html) };
 
   // E-mail para você (vendas): dados + pedido + registro do aceite + link de aprovação
   await enviarEmail(env, {
     to: env.SALES_EMAIL,
     reply_to: cliente.email,
     subject: `💰 Nova venda: Plano ${planoInfo.pt} — ${cliente.nome} (${valor})`,
+    anexos: [anexoAssinado],
     html: layout('Nova compra confirmada', `
       <p><b>Pagamento confirmado.</b> Entre em contato com o cliente em até 1 dia útil.</p>
       ${m.inicio_antecipado === 'sim'
@@ -393,9 +415,9 @@ async function pagamentoConfirmado(env, sessionId) {
       ${tabela([['Pedido', pedido], ['Plano', planoInfo.pt], ['Valor', valor], ['Forma de pagamento', (charge && charge.payment_method_details && charge.payment_method_details.type) || (s.payment_method_types || []).join(', ')], ['Data', dataBR], [`Fim do prazo de desistência (${janela} dias)`, fimBR], ['Idioma do cliente', L === 'en' ? 'Inglês' : 'Português']])}
       <h3 style="margin:18px 0 8px">Cliente</h3>
       ${tabelaCliente(cliente)}
-      <h3 style="margin:18px 0 8px">Registro da contratação</h3>
-      ${tabela([['Contrato aceito', `Sim — versão ${m.contrato_versao || VERSAO_CONTRATO}`], ['Início antecipado (UK/UE)', m.inicio_antecipado === 'sim' ? 'Sim — pedido expresso registrado' : ''], ['Aceito em', m.aceite_em], ['IP', m.aceite_ip], ['País do IP', m.aceite_pais_ip], ['Versão das políticas', m.politicas_versao], ['Navegador', m.user_agent]])}
-      <p style="font-size:13px">Contrato (PDF): <a href="${env.SITE_URL}${CONTRATO_PDF.pt}">português</a> · <a href="${env.SITE_URL}${CONTRATO_PDF.en}">inglês</a></p>
+      <h3 style="margin:18px 0 8px">Contrato assinado</h3>
+      ${tabela([['Assinado por', m.assinatura_nome], ['Documento', cliente.documento], ['Assinado em', assinado.dataBR + ' (Brasília)'], ['IP / país', `${m.aceite_ip || ''} / ${m.aceite_pais_ip || ''}`], ['Contrato', `versão ${m.contrato_versao} (${m.contrato_idioma === 'en' ? 'inglês' : 'português'})`], ['Integridade do texto (SHA-256)', assinado.integro ? 'Confere com o texto assinado ✔' : 'ATENÇÃO: não confere'], ['Início antecipado (UK/UE)', m.inicio_antecipado === 'sim' ? 'Sim — pedido expresso registrado' : '']])}
+      <p>O contrato assinado com o certificado está <b>anexado</b> a este e-mail. Também dá para abrir e salvar em PDF por aqui: <a href="${linkAssinado}">ver contrato assinado</a>.</p>
       <h3 style="margin:18px 0 8px">Quando entregar o projeto</h3>
       <p>Envie este link ao cliente. Quando ele aprovar, a <b>garantia de ${DIAS_GARANTIA} dias</b> começa e você recebe um e-mail com a data final. Se ele não responder em 7 dias, o contrato considera a entrega aprovada.</p>
       <p style="word-break:break-all;background:#fafafa;border-radius:8px;padding:10px 12px;font-size:13px"><a href="${linkAprovacao}">${linkAprovacao}</a></p>
@@ -411,18 +433,18 @@ async function pagamentoConfirmado(env, sessionId) {
       <p>Hi ${primeiro}! Thank you for choosing FNX DEV.</p>
       <p>We received your payment for the <b>${esc(planoInfo.en)} plan</b> (${esc(valor)}). We'll contact you by WhatsApp or email within <b>1 business day</b> to go over the briefing.</p>
       ${tabela([['Order', pedido], ['Plan', planoInfo.en], ['Amount', valor], ['Date', dataEN]])}
-      <h3 style="margin:18px 0 8px">Your contract</h3>
-      ${tabela([['Agreement accepted', `Services Agreement, version ${m.contrato_versao || VERSAO_CONTRATO}`], ['Accepted on', m.aceite_em], ['Name / ID', `${cliente.nome} — ${cliente.documento}`]])}
-      <p>A PDF copy is attached to this email. You can also <a href="${pdfCliente}">download it here</a>.</p>
+      <h3 style="margin:18px 0 8px">Your signed agreement</h3>
+      ${tabela([['Signed by', m.assinatura_nome], ['Signed on', assinado.dataEN + ' (Brasília time)'], ['Agreement', `Services Agreement, version ${m.contrato_versao}`]])}
+      <p>The signed agreement with its signature certificate is <b>attached</b> to this email. You can also <a href="${linkAssinado}">open it here</a> and save it as PDF.</p>
       <p style="margin-top:18px;font-size:13px;color:#666"><b>${janela}-day guarantee:</b> if you change your mind by ${esc(fimEN)}, use <a href="${env.SITE_URL}/reembolso.html">Request a refund</a>, reply to this email or write to ${suporte}, and ${m.inicio_antecipado === 'sim' ? "we'll refund the amount paid minus the work already done (you asked us to start early; the right to cancel ends once the service is fully delivered)." : "we'll refund 100%. Launch and handover happen after that date."} After delivery, bugs in the work we built are fixed free of charge for ${DIAS_GARANTIA} days.
       Policies: <a href="${env.SITE_URL}/policies.html">${env.SITE_URL}/policies.html</a></p>`)
     : layout('Pagamento confirmado!', `
       <p>Olá, ${primeiro}! Obrigado por escolher a FNX DEV.</p>
       <p>Recebemos o pagamento do <b>Plano ${esc(planoInfo.pt)}</b> (${esc(valor)}). Vamos entrar em contato pelo WhatsApp ou e-mail em até <b>1 dia útil</b> para alinhar o briefing.</p>
       ${tabela([['Pedido', pedido], ['Plano', planoInfo.pt], ['Valor', valor], ['Data', dataBR]])}
-      <h3 style="margin:18px 0 8px">Seu contrato</h3>
-      ${tabela([['Contrato aceito', `Contrato de Prestação de Serviços, versão ${m.contrato_versao || VERSAO_CONTRATO}`], ['Aceito em', m.aceite_em], ['Nome / documento', `${cliente.nome} — ${cliente.documento}`]])}
-      <p>A cópia em PDF está anexada a este e-mail. Você também pode <a href="${pdfCliente}">baixar aqui</a>.</p>
+      <h3 style="margin:18px 0 8px">Seu contrato assinado</h3>
+      ${tabela([['Assinado por', m.assinatura_nome], ['Assinado em', assinado.dataBR + ' (Brasília)'], ['Contrato', `Contrato de Prestação de Serviços, versão ${m.contrato_versao}`]])}
+      <p>O contrato assinado, com o certificado de assinatura, está <b>anexado</b> a este e-mail. Você também pode <a href="${linkAssinado}">abrir aqui</a> e salvar em PDF.</p>
       <p style="margin-top:18px;font-size:13px;color:#666"><b>Garantia de ${janela} dias:</b> se desistir até ${fimBR}, use a página <a href="${env.SITE_URL}/reembolso.html">Solicitar reembolso</a>, responda este e-mail ou escreva para ${suporte}, e ${m.inicio_antecipado === 'sim' ? 'devolvemos o valor pago menos o trabalho já feito (você pediu início antecipado; o direito termina quando o serviço for entregue por completo).' : 'devolvemos 100% do valor. A publicação e a entrega acontecem depois dessa data.'} Depois da entrega, erros e bugs do que desenvolvemos são corrigidos sem custo por ${DIAS_GARANTIA} dias.
       Políticas: <a href="${env.SITE_URL}/politicas.html">${env.SITE_URL}/politicas.html</a></p>`);
 
@@ -431,7 +453,7 @@ async function pagamentoConfirmado(env, sessionId) {
     reply_to: env.SALES_EMAIL,
     subject: L === 'en' ? `Payment confirmed — ${planoInfo.en} plan | FNX DEV` : `Pagamento confirmado — Plano ${planoInfo.pt} | FNX DEV`,
     html,
-    anexos: [{ path: pdfCliente, filename: L === 'en' ? `FNX-DEV-Services-Agreement-v${VERSAO_CONTRATO}.pdf` : `FNX-DEV-Contrato-v${VERSAO_CONTRATO}.pdf` }],
+    anexos: [anexoAssinado],
     idempotencia: `cliente-${s.id}`,
   });
 }
@@ -562,6 +584,119 @@ async function rotaAprovar(request, env) {
     }).catch(e => console.error('Falha e-mail aprovação cliente', e));
   }
   return json({ ok: true, jaAprovado: false, aprovadoAgora: true, aprovadoEm: fmt(agora.toISOString()), garantiaAte: fmt(ate.toISOString()), plano: planoInfo[L] });
+}
+
+// ---------------------------------------------------------------------
+// 7) CONTRATO ASSINADO (documento + certificado de assinatura)
+// ---------------------------------------------------------------------
+function normalizaNome(t) {
+  return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+async function sha256hex(texto) {
+  const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto));
+  return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function base64Utf8(str) {
+  const bytes = new TextEncoder().encode(str); let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+async function lerContrato(env, request, versao, L) {
+  const caminho = (CONTRATOS[versao] || CONTRATOS[VERSAO_CONTRATO]).html[L === 'en' ? 'en' : 'pt'];
+  const base = request ? new URL(request.url).origin : env.SITE_URL;
+  const r = await env.ASSETS.fetch(new Request(base + caminho));
+  if (!r.ok) throw new Error('Contrato não encontrado: ' + caminho);
+  return await r.text();
+}
+async function tokenAssinado(env, sessionId) {
+  const segredo = env.STRIPE_WEBHOOK_SECRET || env.STRIPE_SECRET_KEY || '';
+  const chave = await crypto.subtle.importKey('raw', new TextEncoder().encode(segredo), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', chave, new TextEncoder().encode('contrato:' + sessionId));
+  return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+}
+
+async function montarContratoAssinado(env, s, request) {
+  const m = s.metadata || {};
+  const L = m.contrato_idioma === 'en' ? 'en' : 'pt';
+  const versao = CONTRATOS[m.contrato_versao] ? m.contrato_versao : VERSAO_CONTRATO;
+  const texto = await lerContrato(env, request, versao, L);
+  const hashAtual = await sha256hex(texto);
+  const integro = !!m.contrato_sha256 && hashAtual === m.contrato_sha256;
+  const quando = m.aceite_em ? new Date(m.aceite_em) : new Date(s.created * 1000);
+  const dataBR = quando.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  const dataEN = quando.toLocaleString('en-GB', { timeZone: 'America/Sao_Paulo' });
+  const pedido = s.id.slice(-10).toUpperCase();
+  const planoInfo = PLANOS[m.plano] || { pt: m.plano_nome, en: m.plano_nome };
+  const valor = moneyFmt(s.amount_total, s.currency);
+  const t = L === 'en' ? {
+    titulo: 'Signed Services Agreement', selo: 'Electronically signed document', por: 'Signed by', em: 'on', cert: 'Electronic signature certificate',
+    contratante: 'Client', contratada: 'Service provider', assinatura: 'Signature', ped: 'Order', reg: 'Signature record',
+    linhas: [['Signature (typed full name)', m.assinatura_nome], ['Client name', m.nome], ['ID / tax number', m.documento], ['Email', m.email], ['Phone', m.telefone], ['Address', `${m.endereco || ''} — ${m.cidade || ''}, ${m.pais || ''}`], ['Company', m.empresa],
+      ['Date and time (Brasília)', dataEN], ['Date and time (UTC)', quando.toISOString()], ['IP address', m.aceite_ip], ['Country of connection', m.aceite_pais_ip], ['Browser', m.user_agent],
+      ['Agreement', `Website Development Services Agreement — version ${versao} (English)`], ['SHA-256 of the signed text', m.contrato_sha256], ['Integrity check', integro ? 'Valid — the text below is identical to the text signed' : 'NOT valid — the text differs from the text signed'],
+      ['Policies version', m.politicas_versao], ['Early start requested (UK/EU)', m.inicio_antecipado === 'sim' ? 'Yes' : 'No'],
+      ['Order', `${pedido} · ${planoInfo.en} plan · ${valor}`], ['Payment reference (Stripe)', s.id]],
+    prov: 'Yan Victor Figueiredo Szaida (FNX DEV), Brazilian CPF 073.847.949-78, Rua La Salle, 300, casa 07 – Pinheirinho, Curitiba/PR, CEP 81880-400, Brazil.',
+    legal: 'Electronic signature made by typing the full name and ticking the acceptance box after viewing the full text, recognized by the parties under clause 17 of the Agreement and Article 10, § 2, of Brazilian Provisional Measure 2,200-2/2001.',
+    salvar: 'Save as PDF / Print',
+  } : {
+    titulo: 'Contrato de Prestação de Serviços — assinado', selo: 'Documento assinado eletronicamente', por: 'Assinado por', em: 'em', cert: 'Certificado de assinatura eletrônica',
+    contratante: 'Contratante', contratada: 'Contratada', assinatura: 'Assinatura', ped: 'Pedido', reg: 'Registro da assinatura',
+    linhas: [['Assinatura (nome completo digitado)', m.assinatura_nome], ['Nome do contratante', m.nome], ['CPF / CNPJ / documento', m.documento], ['E-mail', m.email], ['Telefone', m.telefone], ['Endereço', `${m.endereco || ''} — ${m.cidade || ''}, ${m.pais || ''}`], ['Empresa', m.empresa],
+      ['Data e hora (Brasília)', dataBR], ['Data e hora (UTC)', quando.toISOString()], ['Endereço IP', m.aceite_ip], ['País da conexão', m.aceite_pais_ip], ['Navegador', m.user_agent],
+      ['Contrato', `Contrato de Prestação de Serviços de Desenvolvimento Web — versão ${versao} (português)`], ['SHA-256 do texto assinado', m.contrato_sha256], ['Verificação de integridade', integro ? 'Válida — o texto abaixo é idêntico ao texto assinado' : 'NÃO confere — o texto difere do assinado'],
+      ['Versão das políticas', m.politicas_versao], ['Início antecipado (Reino Unido/UE)', m.inicio_antecipado === 'sim' ? 'Sim' : 'Não'],
+      ['Pedido', `${pedido} · Plano ${planoInfo.pt} · ${valor}`], ['Referência do pagamento (Stripe)', s.id]],
+    prov: 'Yan Victor Figueiredo Szaida (FNX DEV), CPF 073.847.949-78, Rua La Salle, 300, casa 07 – Pinheirinho, Curitiba/PR, CEP 81880-400, Brasil.',
+    legal: 'Assinatura eletrônica feita pela digitação do nome completo e marcação da caixa de concordância após a visualização do texto integral, reconhecida pelas partes na cláusula 17 do contrato e no art. 10, § 2º, da MP nº 2.200-2/2001.',
+    salvar: 'Salvar em PDF / Imprimir',
+  };
+  const linhasHtml = t.linhas.filter(([, v]) => v).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('');
+  const html = `<!doctype html><html lang="${L === 'en' ? 'en' : 'pt-BR'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(t.titulo)} — ${pedido}</title><meta name="robots" content="noindex">
+<style>
+body{font-family:Arial,Helvetica,sans-serif;color:#18181b;max-width:820px;margin:0 auto;padding:28px 22px;line-height:1.55;font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #FF6A00;padding-bottom:10px;margin-bottom:16px}
+.top b{font-size:20px}.top span{color:#FF6A00}
+.selo{border:2px solid #16a34a;background:#f0fdf4;border-radius:10px;padding:12px 14px;margin-bottom:18px}
+.selo strong{color:#15803d}
+h1{font-size:20px;margin:0 0 4px} h2{font-size:15px;margin:18px 0 6px}
+p{margin:0 0 8px;text-align:justify} ul{margin:4px 0 10px 20px}
+.cert{border:2px solid #18181b;border-radius:10px;padding:16px;margin-top:28px;break-inside:avoid}
+.cert h2{margin-top:0}
+table{width:100%;border-collapse:collapse;font-size:12.5px} th,td{border-bottom:1px solid #e4e4e7;padding:6px 8px;text-align:left;vertical-align:top} th{width:36%;color:#52525b;font-weight:600}
+td{word-break:break-word}
+.ass{font-family:"Brush Script MT","Segoe Script","Lucida Handwriting",cursive;font-size:28px;color:#1e3a8a;margin:10px 0 2px}
+.btn{position:fixed;right:18px;bottom:18px;background:#FF6A00;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
+.legal{font-size:11.5px;color:#52525b;margin-top:10px}
+@media print{.btn{display:none}body{padding:0}}
+</style></head><body>
+<div class="top"><b>FNX <span>DEV</span></b><div style="font-size:12px;color:#52525b">dev.fnxholding.com · suporte.fnxtech@gmail.com</div></div>
+<div class="selo"><strong>✔ ${esc(t.selo)}</strong><br>${esc(t.por)} <b>${esc(m.assinatura_nome)}</b> ${esc(t.em)} ${esc(L === 'en' ? dataEN : dataBR)} · ${esc(t.ped)} ${pedido} · SHA-256 ${esc((m.contrato_sha256 || '').slice(0, 16))}…</div>
+${texto}
+<div class="cert">
+<h2>${esc(t.cert)}</h2>
+<p><b>${esc(t.contratada)}:</b> ${esc(t.prov)}</p>
+<p><b>${esc(t.contratante)} — ${esc(t.assinatura)}:</b></p>
+<div class="ass">${esc(m.assinatura_nome)}</div>
+<p style="font-size:12px;color:#52525b">${esc(m.nome)} · ${esc(m.documento)} · ${esc(L === 'en' ? dataEN : dataBR)}</p>
+<h2>${esc(t.reg)}</h2>
+<table>${linhasHtml}</table>
+<p class="legal">${esc(t.legal)}</p>
+</div>
+<button class="btn" onclick="window.print()">${esc(t.salvar)}</button>
+</body></html>`;
+  return { html, integro, dataBR, dataEN };
+}
+
+async function rotaContratoAssinado(request, env) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get('pedido') || '', t = url.searchParams.get('t') || '';
+  if (!/^cs_[A-Za-z0-9_]+$/.test(id) || !t || !igualSeguro(t, await tokenAssinado(env, id))) return new Response('Link inválido / Invalid link', { status: 403 });
+  const s = await stripe(env, 'GET', `/v1/checkout/sessions/${id}`);
+  if (s.payment_status !== 'paid') return new Response('Pedido não pago / Order not paid', { status: 404 });
+  const { html } = await montarContratoAssinado(env, s, request);
+  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex' } });
 }
 
 // ---------------------------------------------------------------------

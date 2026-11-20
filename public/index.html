@@ -256,6 +256,21 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
 .stepper div.on{color:var(--text);border-color:var(--or)}
 .modal-body{padding:24px 26px 26px}
 .pane{display:none}.pane.on{display:block}
+.contrato{border:1px solid var(--line2);border-radius:14px;margin-bottom:18px;overflow:hidden}
+.contrato-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;background:#111113;border-bottom:1px solid var(--line);font-size:.86rem;font-weight:700}
+.contrato-top a{color:var(--or);font-weight:600;font-size:.8rem}
+.contrato-texto{max-height:300px;overflow-y:auto;padding:16px 18px;background:#fff;color:#1f1f23;font-size:.84rem;line-height:1.6}
+.contrato-texto h1{font-size:1.05rem;margin-bottom:4px}.contrato-texto h2{font-size:.92rem;margin:14px 0 6px;color:#111}
+.contrato-texto p{margin:0 0 7px;text-align:justify}.contrato-texto ul{margin:4px 0 8px 18px}
+.contrato-aviso{padding:9px 16px;font-size:.78rem;color:var(--muted);background:#111113;border-top:1px solid var(--line)}
+.contrato-aviso.ok{color:#86efac}
+.assinar{border:1px solid var(--line2);border-radius:14px;padding:16px;margin-bottom:16px;background:#0f0f11}
+.assinar label{display:block;font-size:.86rem;font-weight:700;margin-bottom:8px}
+.assinar input{width:100%;background:#151517;border:1px solid var(--line2);border-radius:11px;padding:12px 14px;outline:none;font-size:1rem}
+.assinar input:focus{border-color:var(--or)}
+.assinar input:disabled{opacity:.45;cursor:not-allowed}
+.assinatura-preview{font-family:"Brush Script MT","Segoe Script","Lucida Handwriting",cursive;font-size:1.9rem;color:#fff;min-height:44px;margin:10px 0 0;border-bottom:1px solid var(--line2);padding-bottom:4px}
+.assinar small{display:block;color:var(--dim);font-size:.76rem;margin-top:6px}
 .review{background:#0f0f11;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:20px;font-size:.9rem}
 .review div{display:flex;justify-content:space-between;gap:16px;padding:6px 0;border-bottom:1px dashed var(--line)}
 .review div:last-child{border:0}
@@ -709,7 +724,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
       <details><summary data-en="Will the website/system be mine?">O site/sistema fica no meu nome?</summary><p data-en="Yes. Domain and hosting accounts can be in your name. After full payment you receive the access and project files, as set out in the contract.">Sim. Domínio e contas de hospedagem podem ficar no seu nome. Após a quitação, você recebe os acessos e os arquivos do projeto, conforme o contrato.</p></details>
       <details><summary data-en="Do I need to pay for hosting?">Preciso pagar hospedagem?</summary><p data-en="Many projects run on Cloudflare's free plan. Domain names and paid third-party services are paid by the client, and we recommend the cheapest option for your case.">Muitos projetos rodam no plano gratuito da Cloudflare. Domínio (.com, .com.br) e serviços pagos de terceiros são por conta do cliente, e indicamos a opção mais barata para o seu caso.</p></details>
       <details><summary data-en="What if I need changes after delivery?">E se eu precisar de mudanças depois da entrega?</summary><p data-en="Adjustments during your plan's support period are included. After that, we offer monthly maintenance or on-demand quotes.">Ajustes dentro do período de suporte do plano estão inclusos. Depois disso, oferecemos manutenção mensal ou orçamento por demanda.</p></details>
-      <details><summary data-en="Can I read the contract before buying?">Posso ler o contrato antes de comprar?</summary><p data-en="Yes: <a href='/assets/contrato/contrato-fnx-dev-v1.1-en.pdf' target='_blank'>Services Agreement (PDF)</a>. You accept it at checkout, and after payment you receive a copy by email with your details and the order number.">Sim: <a href="/assets/contrato/contrato-fnx-dev-v1.1-pt.pdf" target="_blank">Contrato de Prestação de Serviços (PDF)</a>. Você aceita no checkout e, após o pagamento, recebe uma cópia por e-mail com seus dados e o número do pedido.</p></details>
+      <details><summary data-en="Can I read the contract before buying?">Posso ler o contrato antes de comprar?</summary><p data-en="Yes: <a href='/assets/contrato/contrato-fnx-dev-v1.2-en.pdf' target='_blank'>Services Agreement (PDF)</a>. You read and sign it electronically at checkout by typing your full name, and after payment you receive the signed copy with the signature certificate by email.">Sim: <a href="/assets/contrato/contrato-fnx-dev-v1.2-pt.pdf" target="_blank">Contrato de Prestação de Serviços (PDF)</a>. Você lê e assina eletronicamente no checkout, digitando seu nome completo, e após o pagamento recebe por e-mail a cópia assinada com o certificado de assinatura.</p></details>
     </div>
   </div>
 </section>
@@ -776,7 +791,7 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
           <li><a href="politicas.html#privacidade" data-en-href="policies.html#privacy" data-en="Privacy Policy">Política de Privacidade (LGPD)</a></li>
           <li><a href="politicas.html#reembolso" data-en-href="policies.html#refund" data-en="Purchase &amp; Refund">Compra e Reembolso</a></li>
           <li><a href="politicas.html#paises" data-en-href="policies.html#countries" data-en="Restricted countries">Países não atendidos</a></li>
-          <li><a href="/assets/contrato/contrato-fnx-dev-v1.1-pt.pdf" data-en-href="/assets/contrato/contrato-fnx-dev-v1.1-en.pdf" target="_blank" data-en="Services Agreement (PDF)">Contrato (PDF)</a></li>
+          <li><a href="/assets/contrato/contrato-fnx-dev-v1.2-pt.pdf" data-en-href="/assets/contrato/contrato-fnx-dev-v1.2-en.pdf" target="_blank" data-en="Services Agreement (PDF)">Contrato (PDF)</a></li>
           <li><a href="reembolso.html" data-en="Request a refund">Solicitar reembolso</a></li>
         </ul>
       </div>
@@ -828,9 +843,20 @@ footer p{color:var(--muted);font-size:.9rem;max-width:320px;margin-top:10px}
 
       <div class="pane" data-pane="2">
         <div class="review" id="co-review"></div>
+        <div class="contrato">
+          <div class="contrato-top"><span data-en="Services Agreement — read before signing">Contrato de Prestação de Serviços — leia antes de assinar</span><a id="contrato-pdf" href="/assets/contrato/contrato-fnx-dev-v1.2-pt.pdf" target="_blank" data-en="Download PDF">Baixar PDF</a></div>
+          <div class="contrato-texto" id="contrato-texto" tabindex="0"></div>
+          <div class="contrato-aviso" id="contrato-aviso" data-en="Scroll to the end of the agreement to sign.">Role até o fim do contrato para assinar.</div>
+        </div>
+        <div class="assinar">
+          <label for="assinatura" data-en="Electronic signature — type your full name">Assinatura eletrônica — digite seu nome completo</label>
+          <input id="assinatura" name="assinatura" autocomplete="off" disabled>
+          <div class="assinatura-preview" id="assinatura-preview" aria-hidden="true"></div>
+          <small data-en="It must match the name in your details. We record the date, time, IP address and the integrity code of the text you sign.">Precisa ser igual ao nome do cadastro. Registramos data, hora, IP e o código de integridade do texto assinado.</small>
+        </div>
         <label class="chk"><input type="checkbox" name="ac_termos" required> <span data-en="I have read and accept the <a href='policies.html#terms' target='_blank'>Terms of Service</a> and the <a href='policies.html#refund' target='_blank'>Purchase &amp; Refund Policy</a>, including the cancellation period (7 days, or 14 days for consumers in the UK and the EU/EEA) and that launch/handover happen after it.">Li e aceito os <a href="politicas.html#termos" target="_blank">Termos de Uso e Serviço</a> e a <a href="politicas.html#reembolso" target="_blank">Política de Compra e Reembolso</a>, incluindo o prazo de desistência (7 dias, ou 14 dias para consumidores do Reino Unido e da UE) e que a publicação/entrega ocorre após esse prazo.</span></label>
         <label class="chk"><input type="checkbox" name="ac_privacidade" required> <span data-en="I have read and accept the <a href='policies.html#privacy' target='_blank'>Privacy Policy</a> and authorize the use of my data to deliver this service.">Li e aceito a <a href="politicas.html#privacidade" target="_blank">Política de Privacidade</a> e autorizo o uso dos meus dados para executar este serviço.</span></label>
-        <label class="chk"><input type="checkbox" name="ac_contrato" required> <span data-en="I have read and accept the <a href='/assets/contrato/contrato-fnx-dev-v1.1-en.pdf' target='_blank'>Website Development Services Agreement (v1.1, PDF)</a>, which governs this project. A copy will be emailed to me.">Li e aceito o <a href="/assets/contrato/contrato-fnx-dev-v1.1-pt.pdf" target="_blank">Contrato de Prestação de Serviços (v1.1, PDF)</a>, que rege este projeto. Uma cópia será enviada ao meu e-mail.</span></label>
+        <label class="chk"><input type="checkbox" name="ac_contrato" required> <span data-en="I have read the Services Agreement above (v1.2) and sign it electronically with the name typed above. A signed copy with the signature certificate will be emailed to me.">Li o Contrato de Prestação de Serviços acima (v1.2) e o assino eletronicamente com o nome digitado. Uma cópia assinada, com o certificado de assinatura, será enviada ao meu e-mail.</span></label>
         <label class="chk"><input type="checkbox" name="ac_pais" required> <span data-en="I declare that I am not located in, resident in or a citizen of any <a href='policies.html#countries' target='_blank'>restricted country or region</a>, and that the information above is true.">Declaro que não estou localizado, não resido e não sou cidadão de nenhum <a href="politicas.html#paises" target="_blank">país ou região não atendida</a>, e que as informações acima são verdadeiras.</span></label>
         <label class="chk" id="chk-antecipado" style="display:none;border:1px dashed rgba(255,255,255,.18);border-radius:12px;padding:12px 14px"><input type="checkbox" name="ac_antecipado"> <span data-en="<b>Optional — start early:</b> I ask FNX DEV to start and, if ready, deliver my project before my 14-day cancellation period ends. I understand that if I cancel after that, I will pay for the work already done, and that I lose my right to cancel once the service is fully delivered. If I leave this unticked, delivery only happens after the 14 days and any cancellation within them is refunded in full."><b>Opcional — começar antes:</b> peço que a FNX DEV comece e, se estiver pronto, entregue meu projeto antes do fim do meu prazo de 14 dias. Entendo que, se eu desistir depois disso, pagarei pelo trabalho já feito, e que perco o direito de desistência quando o serviço for totalmente entregue. Se eu não marcar, a entrega só acontece depois dos 14 dias e a desistência dentro deles tem reembolso integral.</span></label>
         <div class="msg" id="co-msg2"></div>
@@ -944,6 +970,7 @@ function aplicaIdioma(){
   preenchePaises();
   renderPlanos(); renderFaixas(); atualizaResumo();
   if (planoAtual) atualizaSubtitulo();
+  if (typeof carregarContrato === 'function' && modal.classList.contains('open') && $('[data-pane="2"]').classList.contains('on')) carregarContrato();
 }
 $$('[data-lang]').forEach(b => b.addEventListener('click', () => {
   lang = b.dataset.lang; store.set('fnx_lang', lang); aplicaIdioma();
@@ -1201,17 +1228,22 @@ $('#to-step2').addEventListener('click', () => {
     `<div class="total"><span>${r.total}</span><b>${fmt(planoAtual[c], c)}</b></div>`;
   const uk = PAISES_14.includes(f.pais.value);
   $('#chk-antecipado').style.display = uk ? 'flex' : 'none';
+  carregarContrato();
   if (!uk) f.ac_antecipado.checked = false;
   irPasso(2);
 });
 
 $('#to-pay').addEventListener('click', async () => {
   const m = $('#co-msg2'), btn = $('#to-pay'), f = coForm; clearMsg(m);
+  if (!contratoLido) { $('#contrato-texto').focus(); return showMsg(m, lang==='en' ? 'Please read the agreement to the end before signing.' : 'Leia o contrato até o fim antes de assinar.'); }
+  const ass = $('#assinatura').value;
+  if (normNome(ass) !== normNome(f.nome.value) || normNome(ass).split(' ').length < 2) { $('#assinatura').focus(); return showMsg(m, lang==='en' ? 'To sign, type your full name exactly as in your details.' : 'Para assinar, digite seu nome completo exatamente como no cadastro.'); }
   if (!valida(f)) return showMsg(m, T().marque);
   const dados = {
     plano: planoAtual.id, nome: f.nome.value, email: f.email.value, telefone: f.telefone.value,
     pais: f.pais.value, documento: f.documento.value, cidade: f.cidade.value, endereco: f.endereco.value,
     empresa: f.empresa.value, site: f.site.value, descricao: f.descricao.value, website: f.website.value,
+    assinatura: $('#assinatura').value.trim(),
     aceites: { termos: f.ac_termos.checked, privacidade: f.ac_privacidade.checked, contrato: f.ac_contrato.checked, pais: f.ac_pais.checked, antecipado: f.ac_antecipado.checked },
   };
   loading(btn, true);
@@ -1221,6 +1253,37 @@ $('#to-pay').addEventListener('click', async () => {
   } catch (e) { showMsg(m, e.message); }
   finally { loading(btn, false); }
 });
+
+
+/* ---------- contrato + assinatura eletrônica ---------- */
+const VERSAO_CONTRATO = '1.2';
+let contratoLido = false, contratoIdioma = '';
+const normNome = t => String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+async function carregarContrato(){
+  if (contratoIdioma === lang && $('#contrato-texto').innerHTML) return;
+  contratoIdioma = lang; contratoLido = false;
+  $('#contrato-pdf').href = `/assets/contrato/contrato-fnx-dev-v${VERSAO_CONTRATO}-${lang}.pdf`;
+  $('#contrato-texto').innerHTML = '<p>…</p>';
+  try {
+    const r = await fetch(`/assets/contrato/contrato-fnx-dev-v${VERSAO_CONTRATO}-${lang}.html`, {cache:'no-cache'});
+    $('#contrato-texto').innerHTML = await r.text();
+  } catch(e) {
+    $('#contrato-texto').innerHTML = `<p>${lang==='en'?'Could not load the agreement. Use the PDF link above.':'Não foi possível carregar o contrato. Use o link do PDF acima.'}</p>`;
+  }
+  $('#contrato-texto').scrollTop = 0; atualizaLeitura();
+}
+function atualizaLeitura(){
+  const el = $('#contrato-texto');
+  if (!contratoLido && el.scrollHeight > 0 && el.scrollTop + el.clientHeight >= el.scrollHeight - 24) contratoLido = true;
+  $('#assinatura').disabled = !contratoLido;
+  const av = $('#contrato-aviso');
+  av.classList.toggle('ok', contratoLido);
+  av.textContent = contratoLido
+    ? (lang==='en' ? '✓ Agreement read. You can sign below.' : '✓ Contrato lido. Você já pode assinar abaixo.')
+    : (lang==='en' ? 'Scroll to the end of the agreement to sign.' : 'Role até o fim do contrato para assinar.');
+}
+$('#contrato-texto').addEventListener('scroll', atualizaLeitura);
+$('#assinatura').addEventListener('input', e => { $('#assinatura-preview').textContent = e.target.value; });
 
 /* ---------- PERSONALIZADO ---------- */
 const cf = $('#custom-form');
