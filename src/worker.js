@@ -39,10 +39,10 @@ const BLOQUEADOS = {
 // O contrato fica em PDF dentro do site (public/assets/contrato/).
 // Mudou o texto? Gere um PDF novo com outro número de versão e troque aqui
 // (os pedidos antigos continuam ligados à versão que o cliente aceitou).
-const VERSAO_CONTRATO = '1.0';
+const VERSAO_CONTRATO = '1.1';
 const CONTRATO_PDF = {
-  pt: '/assets/contrato/contrato-fnx-dev-v1-pt.pdf',
-  en: '/assets/contrato/contrato-fnx-dev-v1-en.pdf',
+  pt: '/assets/contrato/contrato-fnx-dev-v1.1-pt.pdf',
+  en: '/assets/contrato/contrato-fnx-dev-v1.1-en.pdf',
 };
 const VERSAO_POLITICAS = '2026-11-20';
 
@@ -149,6 +149,8 @@ async function rotaCheckout(request, env) {
     desc_1: desc.slice(0, 480), desc_2: desc.slice(480, 960), desc_3: desc.slice(960, 1440),
     aceite_em: agora, aceite_ip: ip, aceite_pais_ip: paisIp, politicas_versao: VERSAO_POLITICAS,
     contrato_versao: VERSAO_CONTRATO, contrato_aceito: 'sim', janela_dias: String(prazoDesistencia(d.pais)),
+    // Reino Unido / UE: o cliente pode pedir para o serviço começar e ser entregue antes dos 14 dias (cláusula 4.11)
+    inicio_antecipado: (PAISES_14_DIAS.has(d.pais) && a.antecipado) ? 'sim' : 'nao',
     user_agent: (request.headers.get('User-Agent') || '').slice(0, 300),
   };
 
@@ -384,14 +386,15 @@ async function pagamentoConfirmado(env, sessionId) {
     subject: `💰 Nova venda: Plano ${planoInfo.pt} — ${cliente.nome} (${valor})`,
     html: layout('Nova compra confirmada', `
       <p><b>Pagamento confirmado.</b> Entre em contato com o cliente em até 1 dia útil.</p>
-      <p style="background:#fff7f0;border-left:3px solid #ff6a00;padding:10px 12px;border-radius:0 8px 8px 0">
-        <b>Prazo de desistência de ${janela} dias: até ${fimBR}.</b> Pode fazer briefing e prévias, mas só publique / entregue arquivos e acessos depois dessa data.</p>
+      ${m.inicio_antecipado === 'sim'
+        ? `<p style="background:#ecfdf5;border-left:3px solid #16a34a;padding:10px 12px;border-radius:0 8px 8px 0"><b>Cliente pediu início antecipado (Reino Unido/UE).</b> Você pode começar e entregar antes de ${fimBR}. Se ele desistir até essa data, o reembolso é <b>proporcional</b> ao que já foi feito; depois de entregar tudo, ele perde o direito de desistência.</p>`
+        : `<p style="background:#fff7f0;border-left:3px solid #ff6a00;padding:10px 12px;border-radius:0 8px 8px 0"><b>Prazo de desistência de ${janela} dias: até ${fimBR}.</b> Pode fazer briefing e prévias, mas só publique / entregue arquivos e acessos depois dessa data.</p>`}
       <h3 style="margin:18px 0 8px">Pedido</h3>
       ${tabela([['Pedido', pedido], ['Plano', planoInfo.pt], ['Valor', valor], ['Forma de pagamento', (charge && charge.payment_method_details && charge.payment_method_details.type) || (s.payment_method_types || []).join(', ')], ['Data', dataBR], [`Fim do prazo de desistência (${janela} dias)`, fimBR], ['Idioma do cliente', L === 'en' ? 'Inglês' : 'Português']])}
       <h3 style="margin:18px 0 8px">Cliente</h3>
       ${tabelaCliente(cliente)}
       <h3 style="margin:18px 0 8px">Registro da contratação</h3>
-      ${tabela([['Contrato aceito', `Sim — versão ${m.contrato_versao || VERSAO_CONTRATO}`], ['Aceito em', m.aceite_em], ['IP', m.aceite_ip], ['País do IP', m.aceite_pais_ip], ['Versão das políticas', m.politicas_versao], ['Navegador', m.user_agent]])}
+      ${tabela([['Contrato aceito', `Sim — versão ${m.contrato_versao || VERSAO_CONTRATO}`], ['Início antecipado (UK/UE)', m.inicio_antecipado === 'sim' ? 'Sim — pedido expresso registrado' : ''], ['Aceito em', m.aceite_em], ['IP', m.aceite_ip], ['País do IP', m.aceite_pais_ip], ['Versão das políticas', m.politicas_versao], ['Navegador', m.user_agent]])}
       <p style="font-size:13px">Contrato (PDF): <a href="${env.SITE_URL}${CONTRATO_PDF.pt}">português</a> · <a href="${env.SITE_URL}${CONTRATO_PDF.en}">inglês</a></p>
       <h3 style="margin:18px 0 8px">Quando entregar o projeto</h3>
       <p>Envie este link ao cliente. Quando ele aprovar, a <b>garantia de ${DIAS_GARANTIA} dias</b> começa e você recebe um e-mail com a data final. Se ele não responder em 7 dias, o contrato considera a entrega aprovada.</p>
@@ -411,7 +414,7 @@ async function pagamentoConfirmado(env, sessionId) {
       <h3 style="margin:18px 0 8px">Your contract</h3>
       ${tabela([['Agreement accepted', `Services Agreement, version ${m.contrato_versao || VERSAO_CONTRATO}`], ['Accepted on', m.aceite_em], ['Name / ID', `${cliente.nome} — ${cliente.documento}`]])}
       <p>A PDF copy is attached to this email. You can also <a href="${pdfCliente}">download it here</a>.</p>
-      <p style="margin-top:18px;font-size:13px;color:#666"><b>${janela}-day guarantee:</b> if you change your mind by ${esc(fimEN)}, use <a href="${env.SITE_URL}/reembolso.html">Request a refund</a>, reply to this email or write to ${suporte}, and we'll refund 100%. Launch and handover happen after that date. After delivery, bugs in the work we built are fixed free of charge for ${DIAS_GARANTIA} days.
+      <p style="margin-top:18px;font-size:13px;color:#666"><b>${janela}-day guarantee:</b> if you change your mind by ${esc(fimEN)}, use <a href="${env.SITE_URL}/reembolso.html">Request a refund</a>, reply to this email or write to ${suporte}, and ${m.inicio_antecipado === 'sim' ? "we'll refund the amount paid minus the work already done (you asked us to start early; the right to cancel ends once the service is fully delivered)." : "we'll refund 100%. Launch and handover happen after that date."} After delivery, bugs in the work we built are fixed free of charge for ${DIAS_GARANTIA} days.
       Policies: <a href="${env.SITE_URL}/policies.html">${env.SITE_URL}/policies.html</a></p>`)
     : layout('Pagamento confirmado!', `
       <p>Olá, ${primeiro}! Obrigado por escolher a FNX DEV.</p>
@@ -420,7 +423,7 @@ async function pagamentoConfirmado(env, sessionId) {
       <h3 style="margin:18px 0 8px">Seu contrato</h3>
       ${tabela([['Contrato aceito', `Contrato de Prestação de Serviços, versão ${m.contrato_versao || VERSAO_CONTRATO}`], ['Aceito em', m.aceite_em], ['Nome / documento', `${cliente.nome} — ${cliente.documento}`]])}
       <p>A cópia em PDF está anexada a este e-mail. Você também pode <a href="${pdfCliente}">baixar aqui</a>.</p>
-      <p style="margin-top:18px;font-size:13px;color:#666"><b>Garantia de ${janela} dias:</b> se desistir até ${fimBR}, use a página <a href="${env.SITE_URL}/reembolso.html">Solicitar reembolso</a>, responda este e-mail ou escreva para ${suporte}, e devolvemos 100% do valor. A publicação e a entrega acontecem depois dessa data. Depois da entrega, erros e bugs do que desenvolvemos são corrigidos sem custo por ${DIAS_GARANTIA} dias.
+      <p style="margin-top:18px;font-size:13px;color:#666"><b>Garantia de ${janela} dias:</b> se desistir até ${fimBR}, use a página <a href="${env.SITE_URL}/reembolso.html">Solicitar reembolso</a>, responda este e-mail ou escreva para ${suporte}, e ${m.inicio_antecipado === 'sim' ? 'devolvemos o valor pago menos o trabalho já feito (você pediu início antecipado; o direito termina quando o serviço for entregue por completo).' : 'devolvemos 100% do valor. A publicação e a entrega acontecem depois dessa data.'} Depois da entrega, erros e bugs do que desenvolvemos são corrigidos sem custo por ${DIAS_GARANTIA} dias.
       Políticas: <a href="${env.SITE_URL}/politicas.html">${env.SITE_URL}/politicas.html</a></p>`);
 
   await enviarEmail(env, {
@@ -464,7 +467,10 @@ async function rotaReembolso(request, env) {
     const fim = new Date(sessao.created * 1000 + janela * 24 * 3600 * 1000);
     dentro = agora <= fim;
     prazo = fim.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-    situacao = dentro ? `DENTRO DO PRAZO (${janela} dias, até ${prazo}) — faça o estorno integral na Stripe AGORA` : `FORA DO PRAZO de ${janela} dias (terminou em ${prazo}) — analisar pelo contrato`;
+    const antecipado = mm.inicio_antecipado === 'sim';
+    situacao = !dentro ? `FORA DO PRAZO de ${janela} dias (terminou em ${prazo}) — analisar pelo contrato`
+      : antecipado ? `DENTRO DO PRAZO (${janela} dias, até ${prazo}) com INÍCIO ANTECIPADO — reembolso PROPORCIONAL ao que já foi feito (cláusula 4.11). Se o serviço já foi totalmente entregue, o direito terminou.`
+      : `DENTRO DO PRAZO (${janela} dias, até ${prazo}) — faça o estorno integral na Stripe AGORA`;
     if (sessao.payment_intent) {
       await stripe(env, 'POST', `/v1/payment_intents/${sessao.payment_intent}`, {
         metadata: { reembolso_protocolo: protocolo, reembolso_solicitado_em: agora.toISOString() },
