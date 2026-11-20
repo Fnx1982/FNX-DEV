@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32.png?v=2">
+<meta name="theme-color" content="#0b0b0c">
+<link href="assets/fonts/fonts.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Montserrat',system-ui,sans-serif;background:#0b0b0c;color:#f5f5f6;min-height:100vh;line-height:1.6;
+background-image:radial-gradient(700px 500px at 50% -10%,rgba(255,106,0,.16),transparent 60%)}
+a{color:#ff6a00}
+header{max-width:720px;margin:0 auto;padding:22px}
+header img{height:36px;display:block}
+main{max-width:720px;margin:0 auto;padding:10px 22px 60px}
+.box{background:#151517;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:30px}
+h1{font-size:1.5rem;font-weight:900;margin-bottom:8px}
+p.lead{color:#a3a3ab;margin-bottom:18px}
+table{width:100%;border-collapse:collapse;margin:6px 0 18px;font-size:.92rem}
+td{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
+td:first-child{color:#a3a3ab;width:45%;padding-right:12px}
+.alerta{padding:12px 14px;border-radius:10px;margin-bottom:16px;font-size:.92rem}
+.alerta.verm{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:#fca5a5}
+.alerta.lar{background:rgba(255,106,0,.1);border:1px solid rgba(255,106,0,.35);color:#fdba74}
+.f{margin-bottom:14px}.f label{display:block;font-size:.85rem;font-weight:600;color:#d4d4d8;margin-bottom:6px}
+.f input{width:100%;background:#0f0f11;border:1px solid rgba(255,255,255,.14);border-radius:11px;padding:12px 14px;color:#f5f5f6;font:inherit;outline:none}
+.f input:focus{border-color:#ff6a00}
+.f small{color:#71717a;font-size:.78rem}
+.chk{display:flex;gap:10px;font-size:.9rem;color:#d4d4d8;margin:6px 0 16px}.chk input{accent-color:#dc2626;width:17px;height:17px;margin-top:3px;flex:none}
+.btn{display:inline-flex;justify-content:center;width:100%;border:0;border-radius:12px;padding:14px 22px;font:700 1rem Montserrat,sans-serif;color:#fff;background:#dc2626;cursor:pointer}
+.btn[disabled]{opacity:.55}
+.msg{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:.92rem;display:none}
+.msg.err{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:#fca5a5}
+.msg.ok{display:block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);color:#86efac}
+footer{text-align:center;color:#71717a;font-size:.82rem;padding:0 22px 30px}
+</style>
+<title>Estorno — FNX DEV (uso interno)</title></head>
+<body>
+<header><img src="/assets/logo/fnx-dev-branca.png" alt="FNX DEV" width="111" height="36"></header>
+<main><div class="box">
+  <h1>Fazer estorno</h1>
+  <p class="lead" id="intro">Carregando o pedido…</p>
+  <div id="area" style="display:none">
+    <div id="situacao"></div>
+    <table id="dados"></table>
+    <div class="f" id="campo-valor">
+      <label for="valor">Valor a estornar</label>
+      <input id="valor" inputmode="decimal" autocomplete="off">
+      <small id="valor-ajuda">Deixe como está para estornar o valor total.</small>
+    </div>
+    <label class="chk"><input type="checkbox" id="ok"><span id="txt-ok">Confirmo o estorno deste valor para o cliente.</span></label>
+    <button class="btn" id="b" type="button">Estornar agora</button>
+    <p style="margin-top:14px;font-size:.82rem;color:#71717a">O estorno é feito na Stripe na hora e não pode ser desfeito. O cliente recebe um e-mail automático avisando.</p>
+  </div>
+  <div class="msg" id="m"></div>
+</div></main>
+<footer>Página de uso interno da FNX DEV. Não compartilhe este link.</footer>
+<script>
+const q=new URLSearchParams(location.search), pedido=q.get('pedido')||'', t=q.get('t')||'', protocolo=q.get('p')||'';
+const $=id=>document.getElementById(id);
+const intro=$('intro'), area=$('area'), m=$('m'), b=$('b'), valor=$('valor');
+function msg(txt, tipo){ m.className='msg '+tipo; m.textContent=txt; }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const fmtNum = c => (c/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+let info=null;
+async function chamar(extra){
+  const r=await fetch('/api/estornar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pedido,t,protocolo,...extra})});
+  const j=await r.json().catch(()=>({})); if(!r.ok||!j.ok) throw new Error(j.erro||'Erro ao falar com o servidor.'); return j; }
+function linhas(j){
+  const l=[['Cliente',j.nome],['E-mail',j.email],['Plano',j.plano],['Pedido',j.pedido],['Data da compra',j.compra],
+    [`Fim do prazo de desistência (${j.janela} dias)`,j.fimPrazo],['Valor pago',j.totalTxt]];
+  if(j.jaEstornado>0) l.push(['Já estornado',j.jaEstornadoTxt],['Disponível para estornar',j.restanteTxt]);
+  if(j.protocolo) l.push(['Protocolo',j.protocolo]);
+  $('dados').innerHTML=l.map(([a,v])=>`<tr><td>${esc(a)}</td><td><b>${esc(v||'—')}</b></td></tr>`).join('');
+}
+(async()=>{
+  try{
+    info=await chamar({});
+    intro.style.display='none';
+    if(info.estornadoTotal){ linhas(info); area.style.display='block'; ['campo-valor','b'].forEach(i=>$(i).style.display='none'); document.querySelector('.chk').style.display='none';
+      return msg(`Este pedido já foi estornado por completo (${info.jaEstornadoTxt}).`,'ok'); }
+    linhas(info);
+    $('situacao').innerHTML = !info.dentro
+      ? `<div class="alerta lar"><b>Fora do prazo de desistência.</b> Não há obrigação legal de estorno. Analise pelo contrato antes de estornar.</div>`
+      : info.antecipado
+      ? `<div class="alerta lar"><b>Dentro do prazo, com início antecipado (cliente do Reino Unido/UE).</b> O estorno é PROPORCIONAL: desconte o que já foi feito (cláusula 4.11). Ajuste o valor abaixo.</div>`
+      : `<div class="alerta verm"><b>Dentro do prazo de desistência.</b> O estorno integral é obrigatório e deve ser feito imediatamente.</div>`;
+    valor.value=fmtNum(info.restante);
+    $('valor-ajuda').textContent = `Máximo: ${info.restanteTxt}. Deixe como está para estornar o total.`;
+    area.style.display='block';
+  }catch(e){ intro.style.display='none'; msg(e.message,'err'); }
+})();
+b.addEventListener('click', async()=>{
+  if(!$('ok').checked) return msg('Marque a caixa de confirmação.','err');
+  const digitado=valor.value.trim();
+  const total = digitado==='' || digitado===fmtNum(info.restante);
+  b.disabled=true; b.textContent='Estornando…';
+  try{
+    const j=await chamar({confirmar:true, valor: total ? '' : digitado});
+    area.style.display='none';
+    msg(`Estorno de ${j.valorTxt} feito na Stripe (situação: ${j.status==='succeeded'?'concluído':j.status==='pending'?'processando':j.status}). O cliente foi avisado por e-mail.`,'ok');
+  }catch(e){ b.disabled=false; b.textContent='Estornar agora'; msg(e.message,'err'); }
+});
+</script>
+</body></html>

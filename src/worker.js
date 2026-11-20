@@ -8,11 +8,17 @@
  *   POST /api/stripe-webhook  → Stripe avisa que pagou → e-mails com dados, registro do aceite e contrato em PDF
  *   POST /api/reembolso       → pedido de reembolso com protocolo (página reembolso.html)
  *   POST /api/aprovar         → cliente aprova a entrega e começa a garantia de 90 dias (página aprovar.html)
+ *   POST /api/estornar        → tela segura de estorno (link enviado só para a equipe; página estornar.html)
+ *   GET  /api/contrato-assinado → contrato assinado + certificado de assinatura
+ *
+ * Eventos do webhook na Stripe: checkout.session.completed, checkout.session.async_payment_succeeded,
+ *   checkout.session.async_payment_failed, charge.refunded
  *
  * Variáveis (wrangler.jsonc → "vars"):
  *   SITE_URL, SALES_EMAIL, SUPPORT_EMAIL, RESEND_FROM, PAYMENT_METHODS_BRL
  * Segredos (Cloudflare → Worker → Settings → Variables and Secrets → tipo "Secret"):
  *   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY
+ *   TOKEN_SECRET (opcional, recomendado) → texto aleatório longo usado nos links de aprovação/contrato/estorno
  *
  * Idioma: e-mails para VOCÊ (vendas) são sempre em português.
  *         E-mails e mensagens para o CLIENTE seguem o idioma do site (pt/en).
@@ -96,6 +102,7 @@ export default {
           case '/api/stripe-webhook': return await rotaWebhook(request, env);
           case '/api/reembolso': return await rotaReembolso(request, env);
           case '/api/aprovar': return await rotaAprovar(request, env);
+          case '/api/estornar': return await rotaEstornar(request, env);
         }
         return json({ ok: false, erro: 'Rota não encontrada' }, 404);
       } catch (e) {
@@ -332,6 +339,9 @@ async function rotaWebhook(request, env) {
     case 'checkout.session.async_payment_succeeded':
       await pagamentoConfirmado(env, s.id);
       break;
+    case 'charge.refunded':
+      await estornoNaStripe(env, s);
+      break;
     case 'checkout.session.async_payment_failed': {
       const m = s.metadata || {};
       await enviarEmail(env, {
@@ -500,17 +510,29 @@ async function rotaReembolso(request, env) {
     }
   }
 
-  await enviarEmail(env, {
-    to: env.SUPPORT_EMAIL || env.SALES_EMAIL, reply_to: email,
-    subject: `${dentro ? '🔴 REEMBOLSO DENTRO DO PRAZO' : 'Pedido de reembolso'} — ${protocolo} — ${nome}`,
-    html: layout('Pedido de reembolso / cancelamento', `
+  const integral = dentro && !(sessao && (sessao.metadata || {}).inicio_antecipado === 'sim');
+  const linkEstorno = sessao ? `${env.SITE_URL}/estornar.html?pedido=${encodeURIComponent(sessao.id)}&t=${await tokenHmac(env, 'estornar', sessao.id)}&p=${encodeURIComponent(protocolo)}` : '';
+  const valorTxt = sessao ? moneyFmt(sessao.amount_total, sessao.currency) : '';
+  const assunto = !sessao ? `⚠️ Pedido de reembolso (pedido NÃO localizado) — ${protocolo} — ${nome}`
+    : integral ? `🔴 FAZER ESTORNO — ${valorTxt} — ${nome} — ${protocolo}`
+    : dentro ? `🟠 ESTORNO PROPORCIONAL — ${nome} — ${protocolo}`
+    : `Pedido de reembolso fora do prazo — ${nome} — ${protocolo}`;
+  const botao = (href, texto, cor) => `<p style="margin:18px 0"><a href="${esc(href)}" style="display:inline-block;background:${cor};color:#fff;text-decoration:none;font-weight:700;padding:13px 22px;border-radius:10px">${texto}</a></p>`;
+  const htmlEquipe = layout(integral ? 'Ação necessária: fazer o estorno' : 'Pedido de reembolso / cancelamento', `
       <p style="background:${dentro ? '#fee2e2' : '#fff7f0'};border-left:3px solid ${dentro ? '#dc2626' : '#ff6a00'};padding:10px 12px;border-radius:0 8px 8px 0"><b>${esc(situacao)}</b></p>
-      ${tabela([['Protocolo', protocolo], ['Recebido em', recebidoEm], ['Nome', nome], ['E-mail da compra', email], ['Pedido informado', pedidoInf], ['Pedido na Stripe', sessao ? sessao.id : '—'], ['Valor', sessao ? moneyFmt(sessao.amount_total, sessao.currency) : '—'], ['Plano', sessao ? (sessao.metadata || {}).plano_nome : '—']])}
+      ${integral ? `<p>O cliente está dentro do prazo legal de desistência. O estorno integral deve ser feito <b>imediatamente</b> (CDC art. 49 / Decreto 7.962/2013).</p>` : ''}
+      ${sessao ? botao(linkEstorno, integral ? 'Fazer o estorno agora' : 'Abrir a tela de estorno', '#dc2626') : ''}
+      ${tabela([['Protocolo', protocolo], ['Recebido em', recebidoEm], ['Nome', nome], ['E-mail da compra', email], ['Pedido informado', pedidoInf], ['Pedido na Stripe', sessao ? sessao.id : '—'], ['Valor', valorTxt || '—'], ['Plano', sessao ? (sessao.metadata || {}).plano_nome : '—']])}
       ${motivo ? `<p style="white-space:pre-wrap;background:#fafafa;border-radius:8px;padding:12px;margin-top:12px">${esc(motivo)}</p>` : ''}
-      ${sessao && sessao.payment_intent ? `<p><a href="https://dashboard.stripe.com/payments/${esc(sessao.payment_intent)}">Abrir o pagamento na Stripe (botão "Reembolsar")</a></p>` : ''}
-      <p style="font-size:12px;color:#888">O cliente já recebeu a confirmação com este protocolo.</p>`),
-    idempotencia: `reembolso-${protocolo}`,
-  });
+      ${sessao && sessao.payment_intent ? `<p style="font-size:13px">Também pode estornar pela Stripe: <a href="https://dashboard.stripe.com/payments/${esc(sessao.payment_intent)}">abrir o pagamento</a> → botão "Reembolsar".</p>` : `<p>Procure o pagamento na Stripe pelo e-mail <b>${esc(email)}</b> e faça o estorno pelo botão "Reembolsar".</p>`}
+      <p style="font-size:12px;color:#888">O cliente já recebeu a confirmação com este protocolo. Quando o estorno for feito, ele recebe outro e-mail automaticamente.</p>`);
+  const equipe = [...new Set([env.SALES_EMAIL, env.SUPPORT_EMAIL].filter(Boolean))];
+  let avisados = 0;
+  for (const destino of equipe) {
+    await enviarEmail(env, { to: destino, reply_to: email, subject: assunto, html: htmlEquipe, idempotencia: `reembolso-${protocolo}-${destino}` })
+      .then(() => avisados++).catch(e => console.error('Falha aviso de reembolso para', destino, e && e.message));
+  }
+  if (!avisados) console.error('NENHUM aviso de reembolso foi enviado', protocolo, email);
 
   const primeiro = esc(nome.split(' ')[0]);
   await enviarEmail(env, {
@@ -519,10 +541,10 @@ async function rotaReembolso(request, env) {
     html: L === 'en'
       ? layout('Refund request received', `<p>Hi ${primeiro}! This confirms we received your cancellation/refund request.</p>
           ${tabela([['Reference', protocolo], ['Received on', recebidoEmEN + ' (Brasília time)'], ['Order', pedidoInf]])}
-          <p>If the request is within your cancellation period, we request the full refund from Stripe right away and email you when it is processed. Otherwise we will reply within 5 days.</p>`)
+          <p>If the request is within your cancellation period, we refund you right away and you receive another email as soon as the refund is processed. Otherwise we will reply within 5 days.</p>`)
       : layout('Recebemos seu pedido de reembolso', `<p>Olá, ${primeiro}! Confirmamos o recebimento do seu pedido de cancelamento/reembolso.</p>
           ${tabela([['Protocolo', protocolo], ['Recebido em', recebidoEm], ['Pedido', pedidoInf]])}
-          <p>Se o pedido estiver dentro do seu prazo de desistência, pedimos o estorno integral à Stripe imediatamente e avisamos por e-mail quando for processado. Caso contrário, respondemos em até 5 dias.</p>`),
+          <p>Se o pedido estiver dentro do seu prazo de desistência, fazemos o estorno imediatamente e você recebe outro e-mail assim que ele for processado. Caso contrário, respondemos em até 5 dias.</p>`),
   }).catch(e => console.error('Falha confirmação reembolso', e));
 
   return json({ ok: true, protocolo, recebidoEm: L === 'en' ? recebidoEmEN : recebidoEm });
@@ -531,12 +553,16 @@ async function rotaReembolso(request, env) {
 // ---------------------------------------------------------------------
 // 6) APROVAÇÃO DA ENTREGA (inicia a garantia de 90 dias)
 // ---------------------------------------------------------------------
-async function tokenAprovacao(env, sessionId) {
-  const segredo = env.STRIPE_WEBHOOK_SECRET || env.STRIPE_SECRET_KEY || '';
+// Chave dos links assinados (aprovação, contrato assinado, estorno).
+// Use o secret TOKEN_SECRET (texto aleatório próprio) para os links não dependerem
+// do segredo do webhook: se um dia trocar o webhook, os links antigos continuam valendo.
+async function tokenHmac(env, finalidade, sessionId) {
+  const segredo = env.TOKEN_SECRET || env.STRIPE_WEBHOOK_SECRET || env.STRIPE_SECRET_KEY || '';
   const chave = await crypto.subtle.importKey('raw', new TextEncoder().encode(segredo), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const sig = await crypto.subtle.sign('HMAC', chave, new TextEncoder().encode('aprovar:' + sessionId));
+  const sig = await crypto.subtle.sign('HMAC', chave, new TextEncoder().encode(finalidade + ':' + sessionId));
   return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
 }
+async function tokenAprovacao(env, sessionId) { return tokenHmac(env, 'aprovar', sessionId); }
 async function linkDeAprovacao(env, sessionId) {
   return `${env.SITE_URL}/aprovar.html?pedido=${encodeURIComponent(sessionId)}&t=${await tokenAprovacao(env, sessionId)}`;
 }
@@ -587,6 +613,93 @@ async function rotaAprovar(request, env) {
 }
 
 // ---------------------------------------------------------------------
+// 6b) ESTORNO (tela segura enviada só para a equipe no e-mail de reembolso)
+// ---------------------------------------------------------------------
+async function rotaEstornar(request, env) {
+  const d = await lerJson(request);
+  const id = limpa(d.pedido, 120), t = limpa(d.t, 64), protocolo = limpa(d.protocolo, 40);
+  if (!/^cs_[A-Za-z0-9_]+$/.test(id) || !t || !igualSeguro(t, await tokenHmac(env, 'estornar', id))) return erro('Link de estorno inválido.');
+
+  const s = await stripe(env, 'GET', `/v1/checkout/sessions/${id}?expand[]=payment_intent.latest_charge`);
+  if (s.payment_status !== 'paid' || !s.payment_intent) return erro('Este pedido não tem pagamento confirmado.');
+  const m = s.metadata || {}, pi = s.payment_intent, charge = pi.latest_charge || {};
+  const jaEstornado = Number(charge.amount_refunded || 0);
+  const restante = s.amount_total - jaEstornado;
+  const janela = Number(m.janela_dias) || prazoDesistencia(m.pais);
+  const fim = new Date(s.created * 1000 + janela * 24 * 3600 * 1000);
+  const info = {
+    nome: m.nome || '', email: m.email || (s.customer_details || {}).email || '', plano: m.plano_nome || m.plano || '',
+    pedido: s.id.slice(-10).toUpperCase(), moeda: s.currency, total: s.amount_total, jaEstornado, restante,
+    totalTxt: moneyFmt(s.amount_total, s.currency), jaEstornadoTxt: moneyFmt(jaEstornado, s.currency), restanteTxt: moneyFmt(restante, s.currency),
+    compra: new Date(s.created * 1000).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+    fimPrazo: fim.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }), janela, dentro: new Date() <= fim,
+    antecipado: m.inicio_antecipado === 'sim', protocolo: protocolo || (pi.metadata || {}).reembolso_protocolo || '',
+  };
+  if (restante <= 0) return json({ ok: true, ...info, estornadoTotal: true });
+  if (!d.confirmar) return json({ ok: true, ...info });
+
+  let valor = restante;
+  if (d.valor != null && d.valor !== '') {
+    valor = Math.round(Number(String(d.valor).replace(/\./g, '').replace(',', '.')) * 100);
+    if (!Number.isFinite(valor) || valor <= 0 || valor > restante) return erro(`Valor inválido. Máximo: ${info.restanteTxt}.`);
+  }
+  const reembolso = await stripe(env, 'POST', '/v1/refunds', {
+    payment_intent: pi.id, amount: valor, reason: 'requested_by_customer',
+    metadata: { protocolo: info.protocolo, origem: 'tela_estorno', ip: request.headers.get('CF-Connecting-IP') || '' },
+  }, `estorno-${pi.id}-${jaEstornado}-${valor}`);
+  await avisarEstorno(env, s, reembolso);
+  return json({ ok: true, ...info, estornadoAgora: true, valorTxt: moneyFmt(valor, s.currency), status: reembolso.status });
+}
+
+// Evento charge.refunded: avisa também quando o estorno é feito direto no painel da Stripe
+async function estornoNaStripe(env, charge) {
+  if (!charge || !charge.payment_intent) return;
+  const piId = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent.id;
+  const lista = await stripe(env, 'GET', `/v1/checkout/sessions?limit=1&payment_intent=${encodeURIComponent(piId)}`);
+  const s = (lista.data || [])[0];
+  if (!s) return;
+  const refunds = await stripe(env, 'GET', `/v1/refunds?limit=1&payment_intent=${encodeURIComponent(piId)}`);
+  const r = (refunds.data || [])[0];
+  if (!r) return;
+  if (String((r.metadata || {}).motivo || '').startsWith('pais_bloqueado')) return; // já avisado no bloqueio
+  await avisarEstorno(env, s, r);
+}
+
+async function avisarEstorno(env, s, r) {
+  const m = s.metadata || {}, L = m.idioma === 'en' ? 'en' : 'pt';
+  const valor = moneyFmt(r.amount, r.currency || s.currency), total = moneyFmt(s.amount_total, s.currency);
+  const parcial = r.amount < s.amount_total;
+  const pedido = s.id.slice(-10).toUpperCase();
+  const quando = new Date((r.created || Date.now() / 1000) * 1000);
+  const quandoBR = quando.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  const quandoEN = quando.toLocaleString('en-GB', { timeZone: 'America/Sao_Paulo' });
+  const protocolo = (r.metadata || {}).protocolo || '';
+  const emailCliente = m.email || (s.customer_details || {}).email;
+
+  await enviarEmail(env, {
+    to: env.SALES_EMAIL,
+    subject: `↩️ Estorno feito — ${valor} — ${m.nome || ''}`,
+    html: layout(parcial ? 'Estorno parcial feito' : 'Estorno feito', `${tabela([['Pedido', pedido], ['Cliente', m.nome], ['E-mail', emailCliente], ['Plano', m.plano_nome], ['Valor pago', total], ['Valor estornado', valor], ['Situação na Stripe', r.status], ['Data', quandoBR], ['Protocolo', protocolo || '—'], ['ID do estorno', r.id]])}
+      <p style="font-size:12px;color:#888">O cliente foi avisado por e-mail.</p>`),
+    idempotencia: `estornado-equipe-${r.id}`,
+  }).catch(e => console.error('Falha aviso estorno equipe', e && e.message));
+
+  if (!emailCliente) return;
+  await enviarEmail(env, {
+    to: emailCliente, reply_to: env.SUPPORT_EMAIL || env.SALES_EMAIL,
+    subject: L === 'en' ? `Your refund was processed — ${valor} | FNX DEV` : `Seu reembolso foi processado — ${valor} | FNX DEV`,
+    html: L === 'en'
+      ? layout('Refund processed', `<p>Hi ${esc((m.nome || '').split(' ')[0])}! Your ${parcial ? 'partial ' : ''}refund was processed.</p>
+          ${tabela([['Order', pedido], ['Amount paid', total], ['Amount refunded', valor], ['Processed on', quandoEN + ' (Brasília time)'], ...(protocolo ? [['Reference', protocolo]] : [])])}
+          <p>Card refunds usually appear on your statement within 5 to 10 business days, depending on your bank.</p>`)
+      : layout('Reembolso processado', `<p>Olá, ${esc((m.nome || '').split(' ')[0])}! Seu reembolso ${parcial ? 'parcial ' : ''}foi processado.</p>
+          ${tabela([['Pedido', pedido], ['Valor pago', total], ['Valor reembolsado', valor], ['Processado em', quandoBR], ...(protocolo ? [['Protocolo', protocolo]] : [])])}
+          <p>No cartão, o estorno costuma aparecer na fatura em 5 a 10 dias úteis, conforme o banco (pode cair na fatura seguinte). No Pix, o valor volta para a conta de origem. No boleto, a Stripe envia ao seu e-mail as instruções para receber o valor.</p>`),
+    idempotencia: `estornado-cliente-${r.id}`,
+  }).catch(e => console.error('Falha aviso estorno cliente', e && e.message));
+}
+
+// ---------------------------------------------------------------------
 // 7) CONTRATO ASSINADO (documento + certificado de assinatura)
 // ---------------------------------------------------------------------
 function normalizaNome(t) {
@@ -609,10 +722,7 @@ async function lerContrato(env, request, versao, L) {
   return await r.text();
 }
 async function tokenAssinado(env, sessionId) {
-  const segredo = env.STRIPE_WEBHOOK_SECRET || env.STRIPE_SECRET_KEY || '';
-  const chave = await crypto.subtle.importKey('raw', new TextEncoder().encode(segredo), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const sig = await crypto.subtle.sign('HMAC', chave, new TextEncoder().encode('contrato:' + sessionId));
-  return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+  return tokenHmac(env, 'contrato', sessionId);
 }
 
 async function montarContratoAssinado(env, s, request) {
@@ -702,8 +812,9 @@ async function rotaContratoAssinado(request, env) {
 // ---------------------------------------------------------------------
 // STRIPE
 // ---------------------------------------------------------------------
-async function stripe(env, metodo, caminho, params) {
+async function stripe(env, metodo, caminho, params, idem) {
   const opts = { method: metodo, headers: { Authorization: `Bearer ${env.STRIPE_SECRET_KEY}` } };
+  if (idem) opts.headers['Idempotency-Key'] = String(idem).slice(0, 255);
   if (params) {
     opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     opts.body = formEncode(params);
