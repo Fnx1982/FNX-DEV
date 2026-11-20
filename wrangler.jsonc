@@ -3,6 +3,8 @@
   "name": "fnx-dev",
   "main": "src/worker.js",
   "compatibility_date": "2026-11-01",
+  // Guarda os logs do Worker (Cloudflare → fnx-dev → Observability), para ver erros depois
+  "observability": { "enabled": true },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
@@ -17,8 +19,8 @@
     "SUPPORT_EMAIL": "suporte.fnxtech@gmail.com",
     // Remetente dos e-mails (domínio precisa estar verificado no Resend)
     "RESEND_FROM": "FNX DEV <vendas@fnxholding.com>",
-    // Formas de pagamento no Brasil. Quando o Pix for liberado na Stripe, mude para "card,boleto,pix"
-    "PAYMENT_METHODS_BRL": "card,boleto"
+    // Formas de pagamento no Brasil (Pix ativado na Stripe em nov/2026)
+    "PAYMENT_METHODS_BRL": "card,boleto,pix"
   }
   // Segredos (NÃO coloque aqui): STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY
 }

@@ -77,7 +77,8 @@ export default {
         return json({ ok: false, erro: 'Rota não encontrada' }, 404);
       } catch (e) {
         console.error('Erro na API', url.pathname, e && e.stack || e);
-        return json({ ok: false, erro: MSG.pt.interno + ' / ' + MSG.en.interno }, 500);
+        const codigo = e instanceof StripeErro ? ` (código: stripe-${e.status}${e.codigo ? '-' + e.codigo : ''}${e.param ? ' / ' + e.param : ''})` : '';
+        return json({ ok: false, erro: MSG.pt.interno + ' / ' + MSG.en.interno + codigo }, 500);
       }
     }
     return env.ASSETS.fetch(request);
@@ -171,7 +172,7 @@ async function rotaCheckout(request, env) {
     params.payment_method_types = ['card'];
   }
 
-  const sessao = await stripe(env, 'POST', '/v1/checkout/sessions', params);
+  const sessao = await criarCheckout(env, params);
 
   // Aviso de pré-cadastro (lead) — chega mesmo se a pessoa desistir no pagamento
   await enviarEmail(env, {
@@ -444,9 +445,42 @@ async function stripe(env, metodo, caminho, params) {
   const j = await r.json();
   if (!r.ok) {
     console.error('Stripe erro', r.status, JSON.stringify(j));
-    throw new Error('Stripe: ' + (j.error && j.error.message || r.status));
+    throw new StripeErro(r.status, j.error || {});
   }
   return j;
+}
+
+class StripeErro extends Error {
+  constructor(status, err) {
+    super('Stripe: ' + (err.message || status));
+    this.status = status;
+    this.param = err.param || '';
+    this.codigo = err.code || err.type || '';
+  }
+}
+
+// Cria o checkout. Se a Stripe recusar alguma forma de pagamento ou opção
+// (ex.: parcelamento ou Pix ainda não liberados na conta), tenta de novo sem ela,
+// para a venda não travar. O motivo fica registrado nos logs do Worker.
+async function criarCheckout(env, params) {
+  const semParcelas = p => { const c = structuredClone(p); if (c.payment_method_options && c.payment_method_options.card) delete c.payment_method_options.card; return c; };
+  const semPix = p => { const c = structuredClone(p); c.payment_method_types = (c.payment_method_types || []).filter(t => t !== 'pix'); if (c.payment_method_options) delete c.payment_method_options.pix; return c; };
+  const soCartao = p => { const c = structuredClone(p); c.payment_method_types = ['card']; delete c.payment_method_options; return c; };
+  const tentativas = [params, semParcelas(params), semPix(semParcelas(params)), soCartao(params)];
+  let ultimoErro;
+  for (let i = 0; i < tentativas.length; i++) {
+    if (i > 0 && JSON.stringify(tentativas[i]) === JSON.stringify(tentativas[i - 1])) continue;
+    try {
+      const sessao = await stripe(env, 'POST', '/v1/checkout/sessions', tentativas[i]);
+      if (i > 0) console.warn('Checkout criado na tentativa', i + 1, '— a Stripe recusou:', ultimoErro && ultimoErro.param, ultimoErro && ultimoErro.message);
+      return sessao;
+    } catch (e) {
+      ultimoErro = e;
+      const recusaDeFormaDePagamento = e instanceof StripeErro && e.status === 400 && /payment_method|installments|pix|boleto/i.test(e.param + ' ' + e.message);
+      if (!recusaDeFormaDePagamento) throw e;
+    }
+  }
+  throw ultimoErro;
 }
 
 function formEncode(obj, prefixo, out = []) {
