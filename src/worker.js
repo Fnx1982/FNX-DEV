@@ -77,7 +77,7 @@ export default {
         return json({ ok: false, erro: 'Rota não encontrada' }, 404);
       } catch (e) {
         console.error('Erro na API', url.pathname, e && e.stack || e);
-        const codigo = e instanceof StripeErro ? ` (código: stripe-${e.status}${e.codigo ? '-' + e.codigo : ''}${e.param ? ' / ' + e.param : ''})` : '';
+        const codigo = e instanceof StripeErro ? ` (código: stripe-${e.status}${e.codigo ? '-' + e.codigo : ''}${e.param ? ' / ' + e.param : ''} — ${e.message.replace(/^Stripe: /, '').slice(0, 220)})` : '';
         return json({ ok: false, erro: MSG.pt.interno + ' / ' + MSG.en.interno + codigo }, 500);
       }
     }
@@ -466,7 +466,10 @@ async function criarCheckout(env, params) {
   const semParcelas = p => { const c = structuredClone(p); if (c.payment_method_options && c.payment_method_options.card) delete c.payment_method_options.card; return c; };
   const semPix = p => { const c = structuredClone(p); c.payment_method_types = (c.payment_method_types || []).filter(t => t !== 'pix'); if (c.payment_method_options) delete c.payment_method_options.pix; return c; };
   const soCartao = p => { const c = structuredClone(p); c.payment_method_types = ['card']; delete c.payment_method_options; return c; };
-  const tentativas = [params, semParcelas(params), semPix(semParcelas(params)), soCartao(params)];
+  // Última tentativa: sem lista de formas de pagamento — a Stripe usa as que estão ativas no painel
+  // (Configurações → Formas de pagamento).
+  const formasDoPainel = p => { const c = structuredClone(p); delete c.payment_method_types; delete c.payment_method_options; return c; };
+  const tentativas = [params, semParcelas(params), semPix(semParcelas(params)), soCartao(params), formasDoPainel(params)];
   let ultimoErro;
   for (let i = 0; i < tentativas.length; i++) {
     if (i > 0 && JSON.stringify(tentativas[i]) === JSON.stringify(tentativas[i - 1])) continue;
